@@ -11,7 +11,7 @@ std::unordered_map<MD_BLOCKTYPE, std::string> blockt_to_str = {
     {MD_BLOCK_OL, "MD_BLOCK_OL"},
     {MD_BLOCK_LI, "li"},
     {MD_BLOCK_HR, "MD_BLOCK_HR"},
-    {MD_BLOCK_H, "h1"},
+    {MD_BLOCK_H, "h"},
     {MD_BLOCK_CODE, "MD_BLOCK_CODE"},
     {MD_BLOCK_HTML, "MD_BLOCK_HTML"},
     {MD_BLOCK_P, "p"},
@@ -50,13 +50,25 @@ std::unordered_map<MD_SPANTYPE, std::string> spant_to_str = {
     {MD_SPAN_SUBSCRIPT, "MD_SPAN_SUBSCRIPT"},
 };
 
-int enter(MD_BLOCKTYPE type, void *, void *) {
-  std::cout << "<" << blockt_to_str.at(type) << ">" << std::endl;
+int enter(MD_BLOCKTYPE type, void *detail_ptr, void *) {
+  if (type == MD_BLOCK_H) {
+    auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
+    std::cout << "<" << blockt_to_str.at(type) << detail->level << ">"
+              << std::endl;
+  } else {
+    std::cout << "<" << blockt_to_str.at(type) << ">" << std::endl;
+  }
   return 0;
 }
 
-int leave(MD_BLOCKTYPE type, void *, void *) {
-  std::cout << "</" << blockt_to_str.at(type) << ">" << std::endl;
+int leave(MD_BLOCKTYPE type, void *detail_ptr, void *) {
+  if (type == MD_BLOCK_H) {
+    auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
+    std::cout << "</" << blockt_to_str.at(type) << detail->level << ">"
+              << std::endl;
+  } else {
+    std::cout << "</" << blockt_to_str.at(type) << ">" << std::endl;
+  }
   return 0;
 }
 
