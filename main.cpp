@@ -26,8 +26,8 @@ std::unordered_map<MD_BLOCKTYPE, std::string> blockt_to_str = {
 std::unordered_map<MD_TEXTTYPE, std::string> textt_to_str = {
     {MD_TEXT_NORMAL, " "},
     {MD_TEXT_NULLCHAR, "MD_TEXT_NULLCHAR"},
-    {MD_TEXT_BR, "MD_TEXT_BR"},
-    {MD_TEXT_SOFTBR, "MD_TEXT_SOFTBR"},
+    {MD_TEXT_BR, "<br/>"},
+    {MD_TEXT_SOFTBR, ""},
     {MD_TEXT_ENTITY, "MD_TEXT_ENTITY"},
     {MD_TEXT_CODE, "MD_TEXT_CODE"},
     {MD_TEXT_HTML, "MD_TEXT_HTML"},
@@ -54,12 +54,9 @@ int enter(MD_BLOCKTYPE type, void *detail_ptr, void *html_buf) {
   std::string *this_html_buf = static_cast<std::string *>(html_buf);
   if (type == MD_BLOCK_H) {
     auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
-    std::cout << "<" << blockt_to_str.at(type) << detail->level << ">"
-              << std::endl;
     this_html_buf->append("<" + blockt_to_str.at(type) +
                           std::to_string(detail->level) + ">" + "\n");
   } else {
-    std::cout << "<" << blockt_to_str.at(type) << ">" << std::endl;
     this_html_buf->append("<" + blockt_to_str.at(type) + ">" + "\n");
   }
   return 0;
@@ -69,20 +66,15 @@ int leave(MD_BLOCKTYPE type, void *detail_ptr, void *html_buf) {
   std::string *this_html_buf = static_cast<std::string *>(html_buf);
   if (type == MD_BLOCK_H) {
     auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
-    std::cout << "</" << blockt_to_str.at(type) << detail->level << ">"
-              << std::endl;
     this_html_buf->append("</" + blockt_to_str.at(type) +
                           std::to_string(detail->level) + ">" + "\n");
   } else {
-    std::cout << "</" << blockt_to_str.at(type) << ">" << std::endl;
     this_html_buf->append("</" + blockt_to_str.at(type) + ">" + "\n");
   }
   return 0;
 }
 
 int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size, void *html_buf) {
-  std::cout << textt_to_str.at(type) << "\n"
-            << std::string(text, size) << std::endl;
   std::string *this_html_buf = static_cast<std::string *>(html_buf);
   this_html_buf->append(textt_to_str.at(type) + std::string(text, size) + "\n");
   return 0;
@@ -90,13 +82,11 @@ int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size, void *html_buf) {
 
 int enter_s(MD_SPANTYPE type, void *, void *html_buf) {
   std::string *this_html_buf = static_cast<std::string *>(html_buf);
-  std::cout << "<" << spant_to_str.at(type) << ">" << std::endl;
   this_html_buf->append("<" + spant_to_str.at(type) + ">" + "\n");
   return 0;
 }
 int leave_s(MD_SPANTYPE type, void *, void *html_buf) {
   std::string *this_html_buf = static_cast<std::string *>(html_buf);
-  std::cout << "</" << spant_to_str.at(type) << ">" << std::endl;
   this_html_buf->append("</" + spant_to_str.at(type) + ">" + "\n");
   return 0;
 }
@@ -121,15 +111,14 @@ int main(void) {
 
   int res = md_parse(content.c_str(), content.size(), &parser, &html_buf);
 
-  if (res == 0) {
-    std::cout << "Successfully made tent\n" << std::endl;
-  } else {
-    std::cout << "Some problem occured" << std::endl;
-  }
+  // if (res == 0) {
+  //   std::cout << "Successfully made tent\n" << std::endl;
+  // } else {
+  //   std::cout << "Some problem occured" << std::endl;
+  // }
 
-  std::cout << "--- stay clear ---" << std::endl;
-  std::cout << html_buf << std::endl;
-  std::cout << "------------------" << std::endl;
+  std::ofstream outf("index.html");
+  outf.write(html_buf.c_str(), html_buf.size());
 
   return 0;
 }
