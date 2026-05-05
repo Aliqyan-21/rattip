@@ -50,44 +50,59 @@ std::unordered_map<MD_SPANTYPE, std::string> spant_to_str = {
     {MD_SPAN_SUBSCRIPT, "MD_SPAN_SUBSCRIPT"},
 };
 
-int enter(MD_BLOCKTYPE type, void *detail_ptr, void *) {
+int enter(MD_BLOCKTYPE type, void *detail_ptr, void *html_buf) {
+  std::string *this_html_buf = static_cast<std::string *>(html_buf);
   if (type == MD_BLOCK_H) {
     auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
     std::cout << "<" << blockt_to_str.at(type) << detail->level << ">"
               << std::endl;
+    this_html_buf->append("<" + blockt_to_str.at(type) +
+                          std::to_string(detail->level) + ">" + "\n");
   } else {
     std::cout << "<" << blockt_to_str.at(type) << ">" << std::endl;
+    this_html_buf->append("<" + blockt_to_str.at(type) + ">" + "\n");
   }
   return 0;
 }
 
-int leave(MD_BLOCKTYPE type, void *detail_ptr, void *) {
+int leave(MD_BLOCKTYPE type, void *detail_ptr, void *html_buf) {
+  std::string *this_html_buf = static_cast<std::string *>(html_buf);
   if (type == MD_BLOCK_H) {
     auto *detail = static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr);
     std::cout << "</" << blockt_to_str.at(type) << detail->level << ">"
               << std::endl;
+    this_html_buf->append("</" + blockt_to_str.at(type) +
+                          std::to_string(detail->level) + ">" + "\n");
   } else {
     std::cout << "</" << blockt_to_str.at(type) << ">" << std::endl;
+    this_html_buf->append("</" + blockt_to_str.at(type) + ">" + "\n");
   }
   return 0;
 }
 
-int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size, void *) {
+int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size, void *html_buf) {
   std::cout << textt_to_str.at(type) << "\n"
             << std::string(text, size) << std::endl;
+  std::string *this_html_buf = static_cast<std::string *>(html_buf);
+  this_html_buf->append(textt_to_str.at(type) + std::string(text, size) + "\n");
   return 0;
 }
 
-int enter_s(MD_SPANTYPE type, void *, void *) {
+int enter_s(MD_SPANTYPE type, void *, void *html_buf) {
+  std::string *this_html_buf = static_cast<std::string *>(html_buf);
   std::cout << "<" << spant_to_str.at(type) << ">" << std::endl;
+  this_html_buf->append("<" + spant_to_str.at(type) + ">" + "\n");
   return 0;
 }
-int leave_s(MD_SPANTYPE type, void *, void *) {
+int leave_s(MD_SPANTYPE type, void *, void *html_buf) {
+  std::string *this_html_buf = static_cast<std::string *>(html_buf);
   std::cout << "</" << spant_to_str.at(type) << ">" << std::endl;
+  this_html_buf->append("</" + spant_to_str.at(type) + ">" + "\n");
   return 0;
 }
 
 int main(void) {
+  std::string html_buf;
   std::ifstream inf("test.md");
   if (!inf) {
     std::cout << "wtf" << std::endl;
@@ -104,13 +119,17 @@ int main(void) {
   parser.leave_span = leave_s;
   parser.text = text;
 
-  int res = md_parse(content.c_str(), content.size(), &parser, nullptr);
+  int res = md_parse(content.c_str(), content.size(), &parser, &html_buf);
 
   if (res == 0) {
-    std::cout << "Successfully made tent" << std::endl;
+    std::cout << "Successfully made tent\n" << std::endl;
   } else {
     std::cout << "Some problem occured" << std::endl;
   }
+
+  std::cout << "--- stay clear ---" << std::endl;
+  std::cout << html_buf << std::endl;
+  std::cout << "------------------" << std::endl;
 
   return 0;
 }
