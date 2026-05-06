@@ -8,7 +8,7 @@ std::unordered_map<MD_BLOCKTYPE, std::string> blockt_to_str = {
     {MD_BLOCK_DOC, "body"},
     {MD_BLOCK_QUOTE, "MD_BLOCK_QUOTE"},
     {MD_BLOCK_UL, "ul"},
-    {MD_BLOCK_OL, "MD_BLOCK_OL"},
+    {MD_BLOCK_OL, "ol"},
     {MD_BLOCK_LI, "li"},
     {MD_BLOCK_HR, "MD_BLOCK_HR"},
     {MD_BLOCK_H, "h"},
@@ -30,7 +30,7 @@ std::unordered_map<MD_TEXTTYPE, std::string> textt_to_str = {
     {MD_TEXT_SOFTBR, ""},
     {MD_TEXT_ENTITY, "MD_TEXT_ENTITY"},
     {MD_TEXT_CODE, "MD_TEXT_CODE"},
-    {MD_TEXT_HTML, "MD_TEXT_HTML"},
+    {MD_TEXT_HTML, ""},
     {MD_TEXT_LATEXMATH, "MD_TEXT_LATEXMATH"},
 };
 
