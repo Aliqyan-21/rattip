@@ -110,6 +110,7 @@ int main(void) {
   parser.text = text;
 
   int res = md_parse(content.c_str(), content.size(), &parser, &html_buf);
+  inf.close();
 
   // if (res == 0) {
   //   std::cout << "Successfully made tent\n" << std::endl;
@@ -117,8 +118,22 @@ int main(void) {
   //   std::cout << "Some problem occured" << std::endl;
   // }
 
+  std::ifstream tfile("templates/base.html");
+  std::string base((std::istreambuf_iterator<char>(tfile)),
+                   std::istreambuf_iterator<char>());
+
+  size_t bc = base.find("{blog_content}");
+  tfile.close();
+
+  if (bc != std::string::npos) {
+    base.replace(bc, 14, html_buf);
+  } else {
+    std::cout << "nahi mila lawdiya" << std::endl;
+  }
+
   std::ofstream outf("index.html");
-  outf.write(html_buf.c_str(), html_buf.size());
+  outf.write(base.c_str(), base.size());
+  outf.close();
 
   return 0;
 }
