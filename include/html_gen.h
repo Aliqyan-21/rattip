@@ -43,6 +43,7 @@ private:
   void handle_ul_enter(MD_BLOCK_UL_DETAIL *d);
   void handle_ol_enter(MD_BLOCK_OL_DETAIL *d);
   void handle_li_enter(MD_BLOCK_LI_DETAIL *d);
+  void handle_hr_enter();
   //...
 
   /* handlers for leave_block */
@@ -53,6 +54,7 @@ private:
   void handle_ul_leave();
   void handle_ol_leave();
   void handle_li_leave();
+  void handle_hr_leave();
   //...
 
   /* handlers for enter_span */

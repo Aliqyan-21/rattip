@@ -11,6 +11,8 @@ my name is money, some call me **dollar**
 
 - another pointer
 
+---
+
 1. linux
 2. macos
 3. windows
