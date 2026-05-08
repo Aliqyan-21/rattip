@@ -26,6 +26,8 @@ private:
   MD_PARSER parser_ = {};
   std::string html_buf_; // generated html
 
+  bool is_tight_ = true;
+
   /* dispatchers */
   int dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr);
   int dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr);
@@ -34,15 +36,23 @@ private:
   int dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size);
 
   /* handlers for enter_block */
+  void handle_doc_enter();
   void handle_h_enter(MD_BLOCK_H_DETAIL *d);
   void handle_p_enter();
   void handle_html_enter();
+  void handle_ul_enter(MD_BLOCK_UL_DETAIL *d);
+  void handle_ol_enter(MD_BLOCK_OL_DETAIL *d);
+  void handle_li_enter(MD_BLOCK_LI_DETAIL *d);
   //...
 
   /* handlers for leave_block */
+  void handle_doc_leave();
   void handle_h_leave(MD_BLOCK_H_DETAIL *d);
   void handle_p_leave();
   void handle_html_leave();
+  void handle_ul_leave();
+  void handle_ol_leave();
+  void handle_li_leave();
   //...
 
   /* handlers for enter_span */

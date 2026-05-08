@@ -51,6 +51,9 @@ int HTMLGen::text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size,
 /* -------------------- */
 int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
   switch (type) {
+  case MD_BLOCK_DOC:
+    handle_doc_enter();
+    break;
   case MD_BLOCK_H:
     handle_h_enter(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
     break;
@@ -60,6 +63,15 @@ int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
   case MD_BLOCK_HTML:
     handle_html_enter();
     break;
+  case MD_BLOCK_UL:
+    handle_ul_enter(static_cast<MD_BLOCK_UL_DETAIL *>(detail_ptr));
+    break;
+  case MD_BLOCK_OL:
+    handle_ol_enter(static_cast<MD_BLOCK_OL_DETAIL *>(detail_ptr));
+    break;
+  case MD_BLOCK_LI:
+    handle_li_enter(static_cast<MD_BLOCK_LI_DETAIL *>(detail_ptr));
+    break;
   default:
     break;
   }
@@ -67,6 +79,9 @@ int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
 }
 int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
   switch (type) {
+  case MD_BLOCK_DOC:
+    handle_doc_leave();
+    break;
   case MD_BLOCK_H:
     handle_h_leave(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
     break;
@@ -75,6 +90,15 @@ int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
     break;
   case MD_BLOCK_HTML:
     handle_html_leave();
+    break;
+  case MD_BLOCK_UL:
+    handle_ul_leave();
+    break;
+  case MD_BLOCK_OL:
+    handle_ol_leave();
+    break;
+  case MD_BLOCK_LI:
+    handle_li_leave();
     break;
   default:
     break;
@@ -128,20 +152,40 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
 /* ------------------------ */
 /* handlers for enter_block */
 /* ------------------------ */
+void HTMLGen::handle_doc_enter() { html_buf_ += "<body>\n"; }
 void HTMLGen::handle_h_enter(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += "<h" + std::to_string(d->level) + "> ";
 }
 void HTMLGen::handle_p_enter() { html_buf_ += "<p> "; }
 void HTMLGen::handle_html_enter() { html_buf_ += ""; }
+void HTMLGen::handle_ul_enter(MD_BLOCK_UL_DETAIL *d) {
+  is_tight_ = d->is_tight;
+  html_buf_ += "<ul>\n";
+}
+void HTMLGen::handle_ol_enter(MD_BLOCK_OL_DETAIL *d) {
+  this->is_tight_ = d->is_tight;
+  html_buf_ += "<ol>\n";
+}
+void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) { html_buf_ += "<li> "; }
 
 /* ------------------------ */
 /* handlers for leave_block */
 /* ------------------------ */
+void HTMLGen::handle_doc_leave() { html_buf_ += "\n</body>"; }
 void HTMLGen::handle_h_leave(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += " </h" + std::to_string(d->level) + ">\n";
 }
-void HTMLGen::handle_p_leave() { html_buf_ += " </p>\n"; }
+void HTMLGen::handle_p_leave() {
+  if (!is_tight_) {
+    html_buf_ += " </p>";
+  } else {
+    html_buf_ += " </p>\n";
+  }
+}
 void HTMLGen::handle_html_leave() { html_buf_ += ""; }
+void HTMLGen::handle_ul_leave() { html_buf_ += "</ul>\n"; }
+void HTMLGen::handle_ol_leave() { html_buf_ += "</ol>\n"; }
+void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 
 /* ----------------------- */
 /* handlers for enter_span */
