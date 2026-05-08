@@ -171,7 +171,7 @@ void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) { html_buf_ += "<li> "; }
 /* ------------------------ */
 /* handlers for leave_block */
 /* ------------------------ */
-void HTMLGen::handle_doc_leave() { html_buf_ += "\n</body>"; }
+void HTMLGen::handle_doc_leave() { html_buf_ += "</body>"; }
 void HTMLGen::handle_h_leave(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += " </h" + std::to_string(d->level) + ">\n";
 }
@@ -191,12 +191,12 @@ void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 /* handlers for enter_span */
 /* ----------------------- */
 void HTMLGen::handle_em_enter() { html_buf_ += " <i> "; }
-void HTMLGen::handle_strong_enter() { html_buf_ += " </b> "; }
+void HTMLGen::handle_strong_enter() { html_buf_ += " <b> "; }
 
 /* ----------------------- */
 /* handlers for leave_span */
 /* ----------------------- */
-void HTMLGen::handle_em_leave() { html_buf_ += " <i> "; }
+void HTMLGen::handle_em_leave() { html_buf_ += " </i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
 
 /* ----------------- */
