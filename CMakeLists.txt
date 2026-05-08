@@ -17,9 +17,11 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(SOURCES
   src/main.cpp
+  src/html_gen.cpp
 )
 
 set(HEADERS
+  include/html_gen.h
 )
 
 set(EXTERNALS
