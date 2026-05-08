@@ -29,26 +29,33 @@ private:
   /* dispatchers */
   int dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr);
   int dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr);
-  int dispatch_enter_span(MD_BLOCKTYPE type, void *detail_ptr);
-  int dispatch_leave_span(MD_BLOCKTYPE type, void *detail_ptr);
+  int dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr);
+  int dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr);
   int dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size);
 
   /* handlers for enter_block */
   void handle_h_enter(MD_BLOCK_H_DETAIL *d);
+  void handle_p_enter();
   //...
 
   /* handlers for leave_block */
   void handle_h_leave(MD_BLOCK_H_DETAIL *d);
+  void handle_p_leave();
   //...
 
   /* handlers for enter_span */
+  void handle_em_enter();
+  void handle_strong_enter();
   //...
 
   /* handlers for leave_span */
+  void handle_em_leave();
+  void handle_strong_leave();
   //...
 
   /* handlers for text */
   void handle_normal_text(const MD_CHAR *text, MD_SIZE size);
+  void handle_br_text();
 };
 
 #endif //! HTML_GEN_H
