@@ -36,11 +36,13 @@ private:
   /* handlers for enter_block */
   void handle_h_enter(MD_BLOCK_H_DETAIL *d);
   void handle_p_enter();
+  void handle_html_enter();
   //...
 
   /* handlers for leave_block */
   void handle_h_leave(MD_BLOCK_H_DETAIL *d);
   void handle_p_leave();
+  void handle_html_leave();
   //...
 
   /* handlers for enter_span */
@@ -56,6 +58,7 @@ private:
   /* handlers for text */
   void handle_normal_text(const MD_CHAR *text, MD_SIZE size);
   void handle_br_text();
+  void handle_html_text(const MD_CHAR *text, MD_SIZE size);
 };
 
 #endif //! HTML_GEN_H
