@@ -44,6 +44,7 @@ private:
   void handle_ol_enter(MD_BLOCK_OL_DETAIL *d);
   void handle_li_enter(MD_BLOCK_LI_DETAIL *d);
   void handle_hr_enter();
+  void handle_code_enter(MD_BLOCK_CODE_DETAIL *d);
   //...
 
   /* handlers for leave_block */
@@ -55,6 +56,7 @@ private:
   void handle_ol_leave();
   void handle_li_leave();
   void handle_hr_leave();
+  void handle_code_leave();
   //...
 
   /* handlers for enter_span */
@@ -71,6 +73,7 @@ private:
   void handle_normal_text(const MD_CHAR *text, MD_SIZE size);
   void handle_br_text();
   void handle_html_text(const MD_CHAR *text, MD_SIZE size);
+  void handle_code_text(const MD_CHAR *text, MD_SIZE size);
 };
 
 #endif //! HTML_GEN_H

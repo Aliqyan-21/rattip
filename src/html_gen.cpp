@@ -75,6 +75,9 @@ int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
   case MD_BLOCK_HR:
     handle_hr_enter();
     break;
+  case MD_BLOCK_CODE:
+    handle_code_enter(static_cast<MD_BLOCK_CODE_DETAIL *>(detail_ptr));
+    break;
   default:
     break;
   }
@@ -105,6 +108,9 @@ int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
     break;
   case MD_BLOCK_HR:
     handle_hr_leave();
+    break;
+  case MD_BLOCK_CODE:
+    handle_code_leave();
     break;
   default:
     break;
@@ -149,6 +155,9 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
   case MD_TEXT_HTML:
     handle_html_text(text, size);
     break;
+  case MD_TEXT_CODE:
+    handle_code_text(text, size);
+    break;
   default:
     break;
   }
@@ -174,6 +183,9 @@ void HTMLGen::handle_ol_enter(MD_BLOCK_OL_DETAIL *d) {
 }
 void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) { html_buf_ += "<li> "; }
 void HTMLGen::handle_hr_enter() { html_buf_ += "<hr>"; }
+void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
+  html_buf_ += "<pre><code>\n";
+}
 
 /* ------------------------ */
 /* handlers for leave_block */
@@ -194,6 +206,7 @@ void HTMLGen::handle_ul_leave() { html_buf_ += "</ul>\n"; }
 void HTMLGen::handle_ol_leave() { html_buf_ += "</ol>\n"; }
 void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 void HTMLGen::handle_hr_leave() { html_buf_ += "\n"; }
+void HTMLGen::handle_code_leave() { html_buf_ += "</code></pre>\n"; }
 
 /* ----------------------- */
 /* handlers for enter_span */
@@ -215,5 +228,8 @@ void HTMLGen::handle_normal_text(const MD_CHAR *text, MD_SIZE size) {
 }
 void HTMLGen::handle_br_text() { html_buf_ += " <br/>\n"; }
 void HTMLGen::handle_html_text(const MD_CHAR *text, MD_SIZE size) {
+  html_buf_ += std::string(text, size);
+}
+void HTMLGen::handle_code_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
