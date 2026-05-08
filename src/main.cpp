@@ -1,6 +1,6 @@
 #include "md4c.h"
+#include "utils.hpp"
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <iterator>
 #include <unordered_map>
@@ -93,14 +93,9 @@ int leave_s(MD_SPANTYPE type, void *, void *html_buf) {
 }
 
 int main(void) {
+  verbose = true;
   std::string html_buf;
-  std::ifstream inf("test.md");
-  if (!inf) {
-    std::cout << "wtf" << std::endl;
-    return 1;
-  }
-  std::string content((std::istreambuf_iterator<char>(inf)),
-                      std::istreambuf_iterator<char>());
+  std::string content = load_file("test.md");
   MD_PARSER parser = {};
   parser.abi_version = 0;
 
@@ -111,7 +106,6 @@ int main(void) {
   parser.text = text;
 
   int res = md_parse(content.c_str(), content.size(), &parser, &html_buf);
-  inf.close();
 
   // if (res == 0) {
   //   std::cout << "Successfully made tent\n" << std::endl;
