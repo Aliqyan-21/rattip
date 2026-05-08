@@ -1,10 +1,16 @@
 #include "html_gen.h"
 
+/* ----------- */
+/* CONSTRUCTOR */
+/* ----------- */
 HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
     : content_(content) {
   parser_.abi_version = abi_version;
 }
 
+/* ---------------- */
+/* Public Functions */
+/* ---------------- */
 int HTMLGen::parse_markdown() {
   parser_.enter_block = HTMLGen::enter_block;
   parser_.leave_block = HTMLGen::leave_block;
@@ -15,6 +21,9 @@ int HTMLGen::parse_markdown() {
   return res;
 }
 
+/* ------------------ */
+/* Callback Functions */
+/* ------------------ */
 int HTMLGen::enter_block(MD_BLOCKTYPE type, void *detail_ptr, void *gen_data) {
   auto *self = static_cast<HTMLGen *>(gen_data);
   return self->dispatch_enter_block(type, detail_ptr);
@@ -37,6 +46,9 @@ int HTMLGen::text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size,
   return self->dispatch_text(type, text, size);
 }
 
+/* -------------------- */
+/* Dispatcher Functions */
+/* -------------------- */
 int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
   switch (type) {
   case MD_BLOCK_H:
@@ -77,14 +89,33 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
   return 0;
 }
 
+/* ------------------------ */
+/* handlers for enter_block */
+/* ------------------------ */
 void HTMLGen::handle_h_enter(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += "<h" + std::to_string(d->level) + "> ";
 }
 
+/* ------------------------ */
+/* handlers for leave_block */
+/* ------------------------ */
 void HTMLGen::handle_h_leave(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += "</h" + std::to_string(d->level) + ">";
 }
 
+/* ----------------------- */
+/* handlers for enter_span */
+/* ----------------------- */
+//...
+
+/* ----------------------- */
+/* handlers for leave_span */
+/* ----------------------- */
+//...
+
+/* ----------------- */
+/* handlers for text */
+/* ----------------- */
 void HTMLGen::handle_normal_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
