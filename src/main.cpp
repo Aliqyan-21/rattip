@@ -1,5 +1,6 @@
 #include "md4c.h"
 #include <fstream>
+#include <functional>
 #include <iostream>
 #include <iterator>
 #include <unordered_map>
