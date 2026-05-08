@@ -191,12 +191,12 @@ void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 /* handlers for enter_span */
 /* ----------------------- */
 void HTMLGen::handle_em_enter() { html_buf_ += " <i> "; }
-void HTMLGen::handle_strong_enter() { html_buf_ += " </i> "; }
+void HTMLGen::handle_strong_enter() { html_buf_ += " </b> "; }
 
 /* ----------------------- */
 /* handlers for leave_span */
 /* ----------------------- */
-void HTMLGen::handle_em_leave() { html_buf_ += " <b> "; }
+void HTMLGen::handle_em_leave() { html_buf_ += " <i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
 
 /* ----------------- */
