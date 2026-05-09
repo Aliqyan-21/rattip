@@ -53,7 +53,6 @@ private:
   void handle_tr_enter();
   void handle_th_enter(MD_BLOCK_TD_DETAIL *d);
   void handle_td_enter(MD_BLOCK_TD_DETAIL *d);
-  //...
 
   /* handlers for leave_block */
   void handle_doc_leave();
@@ -73,7 +72,6 @@ private:
   void handle_tr_leave();
   void handle_th_leave();
   void handle_td_leave();
-  //...
 
   /* handlers for enter_span */
   void handle_em_enter();
@@ -85,7 +83,6 @@ private:
   void handle_u_enter();
   void handle_superscript_enter();
   void handle_subscript_enter();
-  //...
 
   /* handlers for leave_span */
   void handle_em_leave();
@@ -97,7 +94,6 @@ private:
   void handle_u_leave();
   void handle_superscript_leave();
   void handle_subscript_leave();
-  //...
 
   /* handlers for text */
   void handle_normal_text(const MD_CHAR *text, MD_SIZE size);
