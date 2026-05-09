@@ -1,9 +1,9 @@
 #ifndef HTML_GEN_H
 #define HTML_GEN_H
 
-#include "md4c.h"
 #include <cstdint>
 #include <string>
+#include "md4c.h"
 
 class HTMLGen {
 public:
@@ -23,8 +23,8 @@ public:
 
 private:
   std::string content_;
-  MD_PARSER parser_ = {};
-  std::string html_buf_; // generated html
+  MD_PARSER   parser_ = {};
+  std::string html_buf_;  // generated html
 
   bool is_tight_ = true;
 
@@ -76,4 +76,4 @@ private:
   void handle_code_text(const MD_CHAR *text, MD_SIZE size);
 };
 
-#endif //! HTML_GEN_H
+#endif  //! HTML_GEN_H

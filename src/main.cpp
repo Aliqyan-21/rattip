@@ -1,15 +1,15 @@
-#include "html_gen.h"
-#include "utils.hpp"
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include "html_gen.h"
+#include "utils.hpp"
 
 int main(void) {
-  verbose = true;
+  verbose             = true;
   std::string content = load_file("test.md");
 
   HTMLGen generator(content);
-  int res = generator.parse_markdown();
+  int     res = generator.parse_markdown();
 
   if (res == 0) {
     std::cout << "Successfully made tent" << std::endl;
@@ -18,8 +18,8 @@ int main(void) {
   }
 
   std::ifstream tfile("templates/base.html");
-  std::string base((std::istreambuf_iterator<char>(tfile)),
-                   std::istreambuf_iterator<char>());
+  std::string   base((std::istreambuf_iterator<char>(tfile)),
+                     std::istreambuf_iterator<char>());
 
   size_t bc = base.find("{blog_content}");
   tfile.close();

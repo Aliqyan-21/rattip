@@ -4,7 +4,7 @@
 /* CONSTRUCTOR */
 /* ----------- */
 HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
-    : content_(content) {
+  : content_(content) {
   parser_.abi_version = abi_version;
 }
 
@@ -14,9 +14,9 @@ HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
 int HTMLGen::parse_markdown() {
   parser_.enter_block = HTMLGen::enter_block;
   parser_.leave_block = HTMLGen::leave_block;
-  parser_.enter_span = HTMLGen::enter_span;
-  parser_.leave_span = HTMLGen::leave_span;
-  parser_.text = HTMLGen::text;
+  parser_.enter_span  = HTMLGen::enter_span;
+  parser_.leave_span  = HTMLGen::leave_span;
+  parser_.text        = HTMLGen::text;
   int res = md_parse(content_.c_str(), content_.size(), &parser_, this);
   return res;
 }
@@ -51,115 +51,70 @@ int HTMLGen::text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size,
 /* -------------------- */
 int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
   switch (type) {
-  case MD_BLOCK_DOC:
-    handle_doc_enter();
-    break;
-  case MD_BLOCK_H:
-    handle_h_enter(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
-    break;
-  case MD_BLOCK_P:
-    handle_p_enter();
-    break;
-  case MD_BLOCK_HTML:
-    handle_html_enter();
-    break;
-  case MD_BLOCK_UL:
-    handle_ul_enter(static_cast<MD_BLOCK_UL_DETAIL *>(detail_ptr));
-    break;
-  case MD_BLOCK_OL:
-    handle_ol_enter(static_cast<MD_BLOCK_OL_DETAIL *>(detail_ptr));
-    break;
-  case MD_BLOCK_LI:
-    handle_li_enter(static_cast<MD_BLOCK_LI_DETAIL *>(detail_ptr));
-    break;
-  case MD_BLOCK_HR:
-    handle_hr_enter();
-    break;
-  case MD_BLOCK_CODE:
-    handle_code_enter(static_cast<MD_BLOCK_CODE_DETAIL *>(detail_ptr));
-    break;
-  default:
-    break;
+    case MD_BLOCK_DOC: handle_doc_enter(); break;
+    case MD_BLOCK_H:
+      handle_h_enter(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_P: handle_p_enter(); break;
+    case MD_BLOCK_HTML: handle_html_enter(); break;
+    case MD_BLOCK_UL:
+      handle_ul_enter(static_cast<MD_BLOCK_UL_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_OL:
+      handle_ol_enter(static_cast<MD_BLOCK_OL_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_LI:
+      handle_li_enter(static_cast<MD_BLOCK_LI_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_HR: handle_hr_enter(); break;
+    case MD_BLOCK_CODE:
+      handle_code_enter(static_cast<MD_BLOCK_CODE_DETAIL *>(detail_ptr));
+      break;
+    default: break;
   }
   return 0;
 }
 int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
   switch (type) {
-  case MD_BLOCK_DOC:
-    handle_doc_leave();
-    break;
-  case MD_BLOCK_H:
-    handle_h_leave(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
-    break;
-  case MD_BLOCK_P:
-    handle_p_leave();
-    break;
-  case MD_BLOCK_HTML:
-    handle_html_leave();
-    break;
-  case MD_BLOCK_UL:
-    handle_ul_leave();
-    break;
-  case MD_BLOCK_OL:
-    handle_ol_leave();
-    break;
-  case MD_BLOCK_LI:
-    handle_li_leave();
-    break;
-  case MD_BLOCK_HR:
-    handle_hr_leave();
-    break;
-  case MD_BLOCK_CODE:
-    handle_code_leave();
-    break;
-  default:
-    break;
+    case MD_BLOCK_DOC: handle_doc_leave(); break;
+    case MD_BLOCK_H:
+      handle_h_leave(static_cast<MD_BLOCK_H_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_P: handle_p_leave(); break;
+    case MD_BLOCK_HTML: handle_html_leave(); break;
+    case MD_BLOCK_UL: handle_ul_leave(); break;
+    case MD_BLOCK_OL: handle_ol_leave(); break;
+    case MD_BLOCK_LI: handle_li_leave(); break;
+    case MD_BLOCK_HR: handle_hr_leave(); break;
+    case MD_BLOCK_CODE: handle_code_leave(); break;
+    default: break;
   }
   return 0;
 }
 int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
   switch (type) {
-  case MD_SPAN_EM:
-    handle_em_enter();
-    break;
-  case MD_SPAN_STRONG:
-    handle_strong_enter();
-    break;
-  default:
-    break;
+    case MD_SPAN_EM: handle_em_enter(); break;
+    case MD_SPAN_STRONG: handle_strong_enter(); break;
+    default: break;
   }
   return 0;
 }
 int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
   switch (type) {
-  case MD_SPAN_EM:
-    handle_em_leave();
-    break;
-  case MD_SPAN_STRONG:
-    handle_strong_leave();
-    break;
-  default:
-    break;
+    case MD_SPAN_EM: handle_em_leave(); break;
+    case MD_SPAN_STRONG: handle_strong_leave(); break;
+    default: break;
   }
   return 0;
 }
 int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
                            MD_SIZE size) {
   switch (type) {
-  case MD_TEXT_NORMAL:
-    handle_normal_text(text, size);
-    break;
-  case MD_TEXT_BR:
-    handle_br_text();
-    break;
-  case MD_TEXT_HTML:
-    handle_html_text(text, size);
-    break;
-  case MD_TEXT_CODE:
-    handle_code_text(text, size);
-    break;
-  default:
-    break;
+    case MD_TEXT_NORMAL: handle_normal_text(text, size); break;
+    case MD_TEXT_BR: handle_br_text(); break;
+    case MD_TEXT_HTML: handle_html_text(text, size); break;
+    case MD_TEXT_CODE: handle_code_text(text, size); break;
+    default: break;
   }
   return 0;
 }
