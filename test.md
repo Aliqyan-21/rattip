@@ -1,3 +1,8 @@
+---
+title: first blog
+date: 1998-01-23
+---
+
 ## Old money
 
 this is so nice, I am *old* money  
