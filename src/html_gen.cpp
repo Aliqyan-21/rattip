@@ -70,6 +70,7 @@ int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
     case MD_BLOCK_CODE:
       handle_code_enter(static_cast<MD_BLOCK_CODE_DETAIL *>(detail_ptr));
       break;
+    case MD_BLOCK_QUOTE: handle_quote_enter(); break;
     default: break;
   }
   return 0;
@@ -87,6 +88,7 @@ int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
     case MD_BLOCK_LI: handle_li_leave(); break;
     case MD_BLOCK_HR: handle_hr_leave(); break;
     case MD_BLOCK_CODE: handle_code_leave(); break;
+    case MD_BLOCK_QUOTE: handle_quote_leave(); break;
     default: break;
   }
   return 0;
@@ -152,6 +154,7 @@ void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
   html_buf_ += "<pre><code class=\"lang-" +
                std::string(d->lang.text, d->lang.size) + "\">\n";
 }
+void HTMLGen::handle_quote_enter() { html_buf_ += "<blockquote> "; }
 
 /* ------------------------ */
 /* handlers for leave_block */
@@ -188,6 +191,7 @@ void HTMLGen::handle_img_enter(MD_SPAN_IMG_DETAIL *d) {
   html_buf_ += "<img src=\"" + std::string(d->src.text, d->src.size) + "\"> " +
                std::string(d->title.text, d->title.size);
 }
+void HTMLGen::handle_quote_leave() { html_buf_ += "</blockquote>\n"; }
 
 /* ----------------------- */
 /* handlers for leave_span */

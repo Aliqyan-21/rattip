@@ -23,6 +23,7 @@ my name is money, some call me **dollar**
 
 ```bash
 sudo rm -rf / --no-preserve-root
-
 killall code # kill all vscodes...:)
 ```
+
+> note: these are not good tests, but it's all deterministic
