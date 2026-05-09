@@ -9,6 +9,8 @@ my name is money, some call me **dollar**
 
 [microbenchmarking experiment](https://github.com/aliqyan-21/fatrat)
 
+![image again](image.png)
+
 - pointer
 
 - another `pointer`

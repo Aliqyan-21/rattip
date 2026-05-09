@@ -99,6 +99,9 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_A:
       handle_link_enter(static_cast<MD_SPAN_A_DETAIL *>(detail_ptr));
       break;
+    case MD_SPAN_IMG:
+      handle_img_enter(static_cast<MD_SPAN_IMG_DETAIL *>(detail_ptr));
+      break;
     default: break;
   }
   return 0;
@@ -109,6 +112,7 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_STRONG: handle_strong_leave(); break;
     case MD_SPAN_CODE: handle_backtick_leave(); break;
     case MD_SPAN_A: handle_link_leave(); break;
+    case MD_SPAN_IMG: handle_img_leave(); break;
     default: break;
   }
   return 0;
@@ -177,8 +181,12 @@ void HTMLGen::handle_em_enter() { html_buf_ += " <i> "; }
 void HTMLGen::handle_strong_enter() { html_buf_ += " <b> "; }
 void HTMLGen::handle_backtick_enter() { html_buf_ += " <code> "; }
 void HTMLGen::handle_link_enter(MD_SPAN_A_DETAIL *d) {
-  html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) +
-               "\"> " + std::string(d->title.text, d->title.size);
+  html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) + "\"> " +
+               std::string(d->title.text, d->title.size);
+}
+void HTMLGen::handle_img_enter(MD_SPAN_IMG_DETAIL *d) {
+  html_buf_ += "<img src=\"" + std::string(d->src.text, d->src.size) + "\"> " +
+               std::string(d->title.text, d->title.size);
 }
 
 /* ----------------------- */
@@ -188,6 +196,7 @@ void HTMLGen::handle_em_leave() { html_buf_ += " </i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
 void HTMLGen::handle_backtick_leave() { html_buf_ += " </code> "; }
 void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
+void HTMLGen::handle_img_leave() { html_buf_ += " </img>"; }
 
 /* ----------------- */
 /* handlers for text */
