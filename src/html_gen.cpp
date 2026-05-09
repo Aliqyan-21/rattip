@@ -6,7 +6,8 @@
 HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
   : content_(content) {
   parser_.abi_version = abi_version;
-  parser_.flags       = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE;
+  parser_.flags       = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE |
+                        MD_FLAG_SUPERSCRIPTS | MD_FLAG_SUBSCRIPTS;
 }
 
 /* ---------------- */
@@ -107,6 +108,8 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
       break;
     case MD_SPAN_DEL: handle_del_enter(); break;
     case MD_SPAN_U: handle_u_enter(); break;
+    case MD_SPAN_SUPERSCRIPT: handle_superscript_enter(); break;
+    case MD_SPAN_SUBSCRIPT: handle_subscript_enter(); break;
     default: break;
   }
   return 0;
@@ -120,6 +123,8 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_IMG: handle_img_leave(); break;
     case MD_SPAN_DEL: handle_del_leave(); break;
     case MD_SPAN_U: handle_u_leave(); break;
+    case MD_SPAN_SUPERSCRIPT: handle_superscript_leave(); break;
+    case MD_SPAN_SUBSCRIPT: handle_subscript_leave(); break;
     default: break;
   }
   return 0;
@@ -210,6 +215,8 @@ void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
 void HTMLGen::handle_img_leave() { html_buf_ += " </img>"; }
 void HTMLGen::handle_del_leave() { html_buf_ += " </del>"; }
 void HTMLGen::handle_u_leave() { html_buf_ += " </u> "; }
+void HTMLGen::handle_superscript_enter() { html_buf_ += "<sup>"; }
+void HTMLGen::handle_subscript_enter() { html_buf_ += "<sub>"; }
 
 /* ----------------- */
 /* handlers for text */
@@ -224,3 +231,5 @@ void HTMLGen::handle_html_text(const MD_CHAR *text, MD_SIZE size) {
 void HTMLGen::handle_code_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
+void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
+void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }

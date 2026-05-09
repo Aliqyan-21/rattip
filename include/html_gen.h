@@ -69,6 +69,8 @@ private:
   void handle_img_enter(MD_SPAN_IMG_DETAIL *d);
   void handle_del_enter();
   void handle_u_enter();
+  void handle_superscript_enter();
+  void handle_subscript_enter();
   //...
 
   /* handlers for leave_span */
@@ -79,6 +81,8 @@ private:
   void handle_img_leave();
   void handle_del_leave();
   void handle_u_leave();
+  void handle_superscript_leave();
+  void handle_subscript_leave();
   //...
 
   /* handlers for text */

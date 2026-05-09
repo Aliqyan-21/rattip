@@ -26,4 +26,6 @@ sudo rm -rf / --no-preserve-root
 killall code # kill all vscodes...:)
 ```
 
+f~x~ = x^k^
+
 > note: these are not good tests, but it's all deterministic
