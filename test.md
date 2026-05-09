@@ -1,6 +1,6 @@
 ## Old money
 
-this is so nice, I am _old_ money  
+this is so nice, I am *old* money  
 my name is money, some call me **dollar**
 
 <img alt="an image" src="image.png" height="200" width="200" />
@@ -17,7 +17,7 @@ my name is money, some call me **dollar**
 
 ---
 
-1. linux
+1. _linux_
 2. macos
 3. ~~windows~~
 
