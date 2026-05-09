@@ -62,11 +62,15 @@ private:
   /* handlers for enter_span */
   void handle_em_enter();
   void handle_strong_enter();
+  void handle_backtick_enter();
+  void handle_link_enter(MD_SPAN_A_DETAIL *d);
   //...
 
   /* handlers for leave_span */
   void handle_em_leave();
   void handle_strong_leave();
+  void handle_backtick_leave();
+  void handle_link_leave();
   //...
 
   /* handlers for text */

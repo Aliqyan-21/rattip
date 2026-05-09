@@ -95,6 +95,10 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
   switch (type) {
     case MD_SPAN_EM: handle_em_enter(); break;
     case MD_SPAN_STRONG: handle_strong_enter(); break;
+    case MD_SPAN_CODE: handle_backtick_enter(); break;
+    case MD_SPAN_A:
+      handle_link_enter(static_cast<MD_SPAN_A_DETAIL *>(detail_ptr));
+      break;
     default: break;
   }
   return 0;
@@ -103,6 +107,8 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
   switch (type) {
     case MD_SPAN_EM: handle_em_leave(); break;
     case MD_SPAN_STRONG: handle_strong_leave(); break;
+    case MD_SPAN_CODE: handle_backtick_leave(); break;
+    case MD_SPAN_A: handle_link_leave(); break;
     default: break;
   }
   return 0;
@@ -169,12 +175,19 @@ void HTMLGen::handle_code_leave() { html_buf_ += "</code></pre>\n"; }
 /* ----------------------- */
 void HTMLGen::handle_em_enter() { html_buf_ += " <i> "; }
 void HTMLGen::handle_strong_enter() { html_buf_ += " <b> "; }
+void HTMLGen::handle_backtick_enter() { html_buf_ += " <code> "; }
+void HTMLGen::handle_link_enter(MD_SPAN_A_DETAIL *d) {
+  html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) +
+               "\"> " + std::string(d->title.text, d->title.size);
+}
 
 /* ----------------------- */
 /* handlers for leave_span */
 /* ----------------------- */
 void HTMLGen::handle_em_leave() { html_buf_ += " </i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
+void HTMLGen::handle_backtick_leave() { html_buf_ += " </code> "; }
+void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
 
 /* ----------------- */
 /* handlers for text */
