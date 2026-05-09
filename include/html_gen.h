@@ -7,7 +7,7 @@
 
 class HTMLGen {
 public:
-  HTMLGen(const std::string &content, uint32_t abi_version = 0);
+  HTMLGen(const std::string &content, int flags, uint32_t abi_version = 0);
 
   int parse_markdown();
 

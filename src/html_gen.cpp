@@ -3,11 +3,10 @@
 /* ----------- */
 /* CONSTRUCTOR */
 /* ----------- */
-HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
+HTMLGen::HTMLGen(const std::string &content, int flags, uint32_t abi_version)
   : content_(content) {
   parser_.abi_version = abi_version;
-  parser_.flags       = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE |
-                  MD_FLAG_SUPERSCRIPTS | MD_FLAG_SUBSCRIPTS;
+  parser_.flags       = flags;
 }
 
 /* ---------------- */

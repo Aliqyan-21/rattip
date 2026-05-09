@@ -8,7 +8,10 @@ int main(void) {
   verbose             = true;
   std::string content = load_file("test.md");
 
-  HTMLGen generator(content);
+  int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
+              MD_FLAG_SUBSCRIPTS;
+
+  HTMLGen generator(content, flags);
   int     res = generator.parse_markdown();
 
   if (res == 0) {
