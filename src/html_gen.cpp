@@ -6,6 +6,7 @@
 HTMLGen::HTMLGen(const std::string &content, uint32_t abi_version)
   : content_(content) {
   parser_.abi_version = abi_version;
+  parser_.flags = MD_FLAG_STRIKETHROUGH;
 }
 
 /* ---------------- */
@@ -104,6 +105,7 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_IMG:
       handle_img_enter(static_cast<MD_SPAN_IMG_DETAIL *>(detail_ptr));
       break;
+    case MD_SPAN_DEL: handle_del_enter(); break;
     default: break;
   }
   return 0;
@@ -115,6 +117,7 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_CODE: handle_backtick_leave(); break;
     case MD_SPAN_A: handle_link_leave(); break;
     case MD_SPAN_IMG: handle_img_leave(); break;
+    case MD_SPAN_DEL: handle_del_leave(); break;
     default: break;
   }
   return 0;
@@ -192,6 +195,7 @@ void HTMLGen::handle_img_enter(MD_SPAN_IMG_DETAIL *d) {
                std::string(d->title.text, d->title.size);
 }
 void HTMLGen::handle_quote_leave() { html_buf_ += "</blockquote>\n"; }
+void HTMLGen::handle_del_enter() { html_buf_ += "<del> "; }
 
 /* ----------------------- */
 /* handlers for leave_span */
@@ -201,6 +205,7 @@ void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
 void HTMLGen::handle_backtick_leave() { html_buf_ += " </code> "; }
 void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
 void HTMLGen::handle_img_leave() { html_buf_ += " </img>"; }
+void HTMLGen::handle_del_leave() { html_buf_ += " </del>"; }
 
 /* ----------------- */
 /* handlers for text */

