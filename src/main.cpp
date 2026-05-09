@@ -8,6 +8,10 @@ int main(void) {
   verbose             = true;
   std::string content = load_file("test.md");
 
+  FMatter fm = parse_front_matter(content);
+  std::cout << "title: " << fm.title << std::endl;
+  std::cout << "date: " << fm.date << std::endl;
+
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
 
@@ -24,14 +28,13 @@ int main(void) {
   std::string   base((std::istreambuf_iterator<char>(tfile)),
                      std::istreambuf_iterator<char>());
 
+  size_t tt = base.find("{blog_title}");
+
   size_t bc = base.find("{blog_content}");
   tfile.close();
 
-  if (bc != std::string::npos) {
-    base.replace(bc, 14, generator.get_html());
-  } else {
-    std::cout << "nahi mila lawdiya" << std::endl;
-  }
+  base.replace(bc, 14, generator.get_html());
+  base.replace(tt, 12, fm.title);
 
   std::ofstream outf("index.html");
   outf.write(base.c_str(), base.size());
