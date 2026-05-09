@@ -46,6 +46,13 @@ private:
   void handle_hr_enter();
   void handle_code_enter(MD_BLOCK_CODE_DETAIL *d);
   void handle_quote_enter();
+  // table
+  void handle_table_enter(MD_BLOCK_TABLE_DETAIL *d);
+  void handle_thead_enter();
+  void handle_tbody_enter();
+  void handle_tr_enter();
+  void handle_th_enter(MD_BLOCK_TD_DETAIL *d);
+  void handle_td_enter(MD_BLOCK_TD_DETAIL *d);
   //...
 
   /* handlers for leave_block */
@@ -59,6 +66,13 @@ private:
   void handle_hr_leave();
   void handle_code_leave();
   void handle_quote_leave();
+  // table
+  void handle_table_leave();
+  void handle_thead_leave();
+  void handle_tbody_leave();
+  void handle_tr_leave();
+  void handle_th_leave();
+  void handle_td_leave();
   //...
 
   /* handlers for enter_span */

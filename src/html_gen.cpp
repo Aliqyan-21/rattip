@@ -72,6 +72,18 @@ int HTMLGen::dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr) {
       handle_code_enter(static_cast<MD_BLOCK_CODE_DETAIL *>(detail_ptr));
       break;
     case MD_BLOCK_QUOTE: handle_quote_enter(); break;
+    case MD_BLOCK_TABLE:
+      handle_table_enter(static_cast<MD_BLOCK_TABLE_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_THEAD: handle_thead_enter(); break;
+    case MD_BLOCK_TBODY: handle_tbody_enter(); break;
+    case MD_BLOCK_TR: handle_tr_enter(); break;
+    case MD_BLOCK_TH:
+      handle_th_enter(static_cast<MD_BLOCK_TD_DETAIL *>(detail_ptr));
+      break;
+    case MD_BLOCK_TD:
+      handle_td_enter(static_cast<MD_BLOCK_TD_DETAIL *>(detail_ptr));
+      break;
     default: break;
   }
   return 0;
@@ -90,6 +102,12 @@ int HTMLGen::dispatch_leave_block(MD_BLOCKTYPE type, void *detail_ptr) {
     case MD_BLOCK_HR: handle_hr_leave(); break;
     case MD_BLOCK_CODE: handle_code_leave(); break;
     case MD_BLOCK_QUOTE: handle_quote_leave(); break;
+    case MD_BLOCK_TABLE: handle_table_leave(); break;
+    case MD_BLOCK_THEAD: handle_thead_leave(); break;
+    case MD_BLOCK_TBODY: handle_tbody_leave(); break;
+    case MD_BLOCK_TR: handle_tr_leave(); break;
+    case MD_BLOCK_TH: handle_th_leave(); break;
+    case MD_BLOCK_TD: handle_td_leave(); break;
     default: break;
   }
   return 0;
@@ -164,6 +182,14 @@ void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
                std::string(d->lang.text, d->lang.size) + "\">\n";
 }
 void HTMLGen::handle_quote_enter() { html_buf_ += "<blockquote> "; }
+void HTMLGen::handle_table_enter(MD_BLOCK_TABLE_DETAIL *d) {
+  html_buf_ += "<table>\n";
+}
+void HTMLGen::handle_thead_enter() { html_buf_ += "<thead>"; }
+void HTMLGen::handle_tbody_enter() { html_buf_ += "<tbody>"; }
+void HTMLGen::handle_tr_enter() { html_buf_ += "<tr>"; }
+void HTMLGen::handle_th_enter(MD_BLOCK_TD_DETAIL *d) { html_buf_ += "<th>"; }
+void HTMLGen::handle_td_enter(MD_BLOCK_TD_DETAIL *d) { html_buf_ += "<td>"; }
 
 /* ------------------------ */
 /* handlers for leave_block */
@@ -185,6 +211,12 @@ void HTMLGen::handle_ol_leave() { html_buf_ += "</ol>\n"; }
 void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 void HTMLGen::handle_hr_leave() { html_buf_ += "\n"; }
 void HTMLGen::handle_code_leave() { html_buf_ += "</code></pre>\n"; }
+void HTMLGen::handle_table_leave() { html_buf_ += "</table>\n"; }
+void HTMLGen::handle_thead_leave() { html_buf_ += "</thead>\n"; }
+void HTMLGen::handle_tbody_leave() { html_buf_ += "</tbody>\n"; }
+void HTMLGen::handle_tr_leave() { html_buf_ += "</tr>\n"; }
+void HTMLGen::handle_th_leave() { html_buf_ += "</th>\n"; }
+void HTMLGen::handle_td_leave() { html_buf_ += "</td>\n"; }
 
 /* ----------------------- */
 /* handlers for enter_span */

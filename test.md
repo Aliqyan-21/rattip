@@ -28,4 +28,11 @@ killall code # kill all vscodes...:)
 
 f~x~ = x^k^
 
+
+|  col1 | col2  |
+| ------| ----- |
+| x1,y1 | x2,y1 |
+| x1,y2 | x2,y2 |
+
+
 > note: these are not good tests, but it's all deterministic

@@ -9,7 +9,7 @@ int main(void) {
   std::string content = load_file("test.md");
 
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
-              MD_FLAG_SUBSCRIPTS;
+              MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
 
   HTMLGen generator(content, flags);
   int     res = generator.parse_markdown();
