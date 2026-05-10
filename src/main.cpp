@@ -4,6 +4,7 @@
 int main(void) {
   verbose = true;
   SSGen ssgen;
+  ssgen.init_theme("default", "theme", "theme.conf");
   ssgen.generate_site();
   return 0;
 }

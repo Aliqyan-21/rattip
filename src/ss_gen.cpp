@@ -30,6 +30,14 @@ void SSGen::content_walker() {
   }
 }
 
+/* intialize theme struct object */
+void SSGen::init_theme(const std::string &name, const std::string &dir,
+                       const std::string &conf_file) {
+  theme_.name      = name;
+  theme_.theme_dir = dir;
+  parse_config_file(conf_file);
+}
+
 void SSGen::generate_html() {
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
@@ -102,4 +110,20 @@ FMatter SSGen::parse_front_matter(std::string &content) {
   content = std::string(std::istreambuf_iterator<char>(ss), {});
   V66V("Front Matter parsed successfully!\n");
   return fm;
+}
+
+/* something like:
+h1 = main-heading
+p  = text-body
+img = beauty
+*/
+void SSGen::parse_config_file(const std::string &config_file) {
+  std::ifstream cfg(config_file);
+  std::string   line;
+  while (std::getline(cfg, line)) {
+    uint64_t pos = line.find("=");
+    if (pos != std::string::npos) {
+      theme_.config[trim(line.substr(0, pos))] = trim(line.substr(pos + 1));
+    }
+  }
 }
