@@ -46,7 +46,7 @@ void SSGen::generate_html() {
 void SSGen::save_html_file(const std::string &html_content,
                            const FMatter     &front_matter,
                            const std::string &md_file) {
-  std::filesystem::create_directory(public_folder_);
+  std::filesystem::create_directories(public_folder_);
 
   std::string page = base_;
 
