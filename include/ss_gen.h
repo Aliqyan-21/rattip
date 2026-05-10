@@ -7,6 +7,7 @@
 struct FMatter {
   std::string title;
   std::string date;
+  std::string tmpl;
 };
 
 class SSGen {
