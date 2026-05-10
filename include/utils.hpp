@@ -1,10 +1,8 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
-#include <cstdint>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 /* verbosity
  give program verbosity based on the verbose variable */
@@ -40,6 +38,5 @@ inline std::string rtrim(const std::string &str) {
 }
 
 inline std::string trim(const std::string &str) { return ltrim(rtrim(str)); }
-
 
 #endif  //! UTILS_HPP
