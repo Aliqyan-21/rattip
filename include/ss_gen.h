@@ -17,6 +17,9 @@ private:
   std::string public_folder_; /* final html will be generated to be served */
   std::vector<std::string> md_files_;
 
+  /* templates */
+  std::string base_;
+
   void content_walker();
   void generate_html();
   void save_html_file(const std::string &html_content,
