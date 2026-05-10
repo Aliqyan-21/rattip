@@ -81,17 +81,4 @@ static inline FMatter parse_front_matter(std::string &content) {
   return fm;
 }
 
-static inline std::string get_filename_from_path(const std::string &path) {
-  /* 'content/path/filename.md' => filename */
-
-  std::string ff;
-  size_t      pos = path.find_last_of("/");
-  if (pos != std::string::npos) {
-    ff = path.substr(pos + 1, (path.find(".") - 1) - pos);
-  } else {
-    //...
-  }
-  return ff;
-}
-
 #endif  //! UTILS_HPP

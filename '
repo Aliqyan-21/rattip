@@ -50,15 +50,18 @@ void SSGen::save_html_file(const std::string &html_content,
   std::filesystem::path rel = std::filesystem::relative(md_path, main_folder_);
   std::filesystem::path out_path = std::filesystem::path(public_folder_) / rel;
   out_path.replace_extension(".html");
+
   std::filesystem::create_directories(out_path.parent_path());
-  std::string   page = base_;
-  std::ofstream of(out_path);
+
+  std::string page = base_;
 
   size_t tt = page.find("{blog_title}");
   page.replace(tt, std::string("{blog_title}").size(), front_matter.title);
   size_t bc = page.find("{blog_content}");
   page.replace(bc, std::string("{blog_content}").size(), html_content);
 
+  std::ofstream of(public_folder_ + "/" + get_filename_from_path(md_file) +
+                   ".html");
   of.write(page.c_str(), page.size());
   of.close();
 }
