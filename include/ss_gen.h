@@ -3,7 +3,11 @@
 
 #include <string>
 #include <vector>
-#include "utils.hpp"
+
+struct FMatter {
+  std::string title;
+  std::string date;
+};
 
 class SSGen {
 public:
@@ -20,8 +24,9 @@ private:
   /* templates */
   std::string base_;
 
-  void content_walker();
-  void generate_html();
+  FMatter parse_front_matter(std::string &content);
+  void    content_walker();
+  void    generate_html();
   void save_html_file(const std::string &html_content,
                       const FMatter &front_matter, const std::string &md_file);
 };
