@@ -11,13 +11,6 @@ public:
 
   int parse_markdown();
 
-  static int enter_block(MD_BLOCKTYPE type, void *detail_ptr, void *gen_data);
-  static int leave_block(MD_BLOCKTYPE type, void *detail_ptr, void *gen_data);
-  static int enter_span(MD_SPANTYPE type, void *detail_ptr, void *gen_data);
-  static int leave_span(MD_SPANTYPE type, void *detail_ptr, void *gen_data);
-  static int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size,
-                  void *gen_data);
-
   /* getter */
   std::string get_html() { return html_buf_; }
 
@@ -27,6 +20,14 @@ private:
   std::string html_buf_;  // generated html
 
   bool is_tight_ = true;
+
+  /* callback functions */
+  static int enter_block(MD_BLOCKTYPE type, void *detail_ptr, void *gen_data);
+  static int leave_block(MD_BLOCKTYPE type, void *detail_ptr, void *gen_data);
+  static int enter_span(MD_SPANTYPE type, void *detail_ptr, void *gen_data);
+  static int leave_span(MD_SPANTYPE type, void *detail_ptr, void *gen_data);
+  static int text(MD_TEXTTYPE type, const MD_CHAR *text, MD_SIZE size,
+                  void *gen_data);
 
   /* dispatchers */
   int dispatch_enter_block(MD_BLOCKTYPE type, void *detail_ptr);

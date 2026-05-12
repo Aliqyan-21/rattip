@@ -2,7 +2,6 @@
 #define SS_GEN_H
 
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 struct FMatter {
@@ -14,10 +13,6 @@ struct FMatter {
 struct Theme {
   std::string name{"default"};
   std::string theme_dir{"themes/default"};
-  std::unordered_map<std::string, std::string>
-    config;  // [html tags : class names]
-  std::unordered_map<std::string, std::string>
-    templates;  // [template (page/blog) : loaded html]
 };
 
 class SSGen {
@@ -45,8 +40,6 @@ private:
 
   void save_html_file(const std::string &html_content,
                       const FMatter &front_matter, const std::string &md_file);
-
-  void parse_config_file(const std::string &config_file);
 };
 
 #endif  //! SS_GEN_H
