@@ -7,7 +7,7 @@
 SSGen::SSGen(const std::string &main_folder_path,
              const std::string &public_folder_path)
   : main_folder_(main_folder_path), public_folder_(public_folder_path) {
-  base_ = load_file("templates/base.html");
+  load_templates();
 }
 
 /*
@@ -58,15 +58,29 @@ void SSGen::save_html_file(const std::string &html_content,
   std::filesystem::path out_path = std::filesystem::path(public_folder_) / rel;
   out_path.replace_extension(".html");
   std::filesystem::create_directories(out_path.parent_path());
-  std::string   page = base_;
+  auto        it = templates_.find(front_matter.tmpl);
+  std::string tmpl;
+  if (it != templates_.end()) {
+    tmpl = it->second;
+  } else {
+    std::cerr << "Could not find the template for: " << front_matter.tmpl
+              << "\n"
+              << "Defaulting to using: " << templates_.begin()->first
+              << std::endl;
+    tmpl = templates_[templates_.begin()->first];
+  }
   std::ofstream of(out_path);
 
-  size_t tt = page.find("{blog_title}");
-  page.replace(tt, std::string("{blog_title}").size(), front_matter.title);
-  size_t bc = page.find("{blog_content}");
-  page.replace(bc, std::string("{blog_content}").size(), html_content);
+  size_t tt = tmpl.find("{title}");
+  tmpl.replace(tt, std::string("{title}").size(), front_matter.title);
+  size_t bc = tmpl.find("{md_content}");
+  tmpl.replace(bc, std::string("{md_content}").size(), html_content);
+  if ("blog" == front_matter.tmpl) {
+    size_t bd = tmpl.find("{blog_date}");
+    tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+  }
 
-  of.write(page.c_str(), page.size());
+  of.write(tmpl.c_str(), tmpl.size());
   of.close();
 }
 
@@ -109,4 +123,19 @@ FMatter SSGen::parse_front_matter(std::string &content) {
   content = std::string(std::istreambuf_iterator<char>(ss), {});
   V66V("Front Matter parsed successfully!\n");
   return fm;
+}
+
+void SSGen::load_templates() {
+  if (!std::filesystem::exists(std::filesystem::path("templates")) ||
+      std::filesystem::is_empty(std::filesystem::path("templates"))) {
+    std::cerr << "templates folder is empty, html files formed will be without "
+                 "templates"
+              << std::endl;
+    return;
+  }
+  for (auto const &en :
+       std::filesystem::recursive_directory_iterator("templates")) {
+    std::string fn = en.path().filename().stem();
+    templates_[fn] = load_file(en.path());
+  }
 }

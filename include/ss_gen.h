@@ -2,6 +2,7 @@
 #define SS_GEN_H
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct FMatter {
@@ -27,11 +28,12 @@ public:
 private:
   std::string main_folder_;
   std::string public_folder_; /* final html will be generated to be served */
-  std::vector<std::string> md_files_;
-  Theme                    theme_;
-
+  std::vector<std::string>                     md_files_;
+  Theme                                        theme_;
   /* templates */
-  std::string base_;
+  std::unordered_map<std::string, std::string> templates_;
+
+  void load_templates();
 
   FMatter parse_front_matter(std::string &content);
 
