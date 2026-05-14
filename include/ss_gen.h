@@ -23,7 +23,7 @@ public:
         const std::string &assets_dir      = "assets");
 
   void generate_site();
-  void init_theme(const std::string &name, const std::string &dir);
+  void init_theme(const std::string &name);
   void set_force();
 
 private:

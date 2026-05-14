@@ -10,6 +10,7 @@ SSGen::SSGen(const std::string &main_dir_path,
     public_dir_(public_dir_path),
     assets_dir_(assets_dir) {
   load_templates();
+  std::filesystem::create_directory(public_dir_path);
   if (std::filesystem::exists(std::filesystem::path(assets_dir_))) {
     std::filesystem::copy(assets_dir_, public_dir_ + "/" + assets_dir_,
                           std::filesystem::copy_options::recursive |
@@ -40,10 +41,9 @@ void SSGen::content_walker() {
 }
 
 /* intialize theme struct object */
-void SSGen::init_theme(const std::string &name, const std::string &dir) {
-  theme_.name      = name;
-  theme_.theme_dir = dir;
-  std::filesystem::copy("themes/dark", public_dir_ + "/styles/",
+void SSGen::init_theme(const std::string &name) {
+  theme_.name = name;
+  std::filesystem::copy("themes/" + name, public_dir_ + "/styles/",
                         std::filesystem::copy_options::recursive |
                           std::filesystem::copy_options::overwrite_existing);
 }
@@ -58,11 +58,9 @@ void SSGen::generate_html() {
     std::filesystem::path out_path = std::filesystem::path(public_dir_) / rel;
     out_path.replace_extension(".html");
 
-    bool exists = std::filesystem::exists(out_path);
-    bool change = std::filesystem::last_write_time(out_path) >=
-                  std::filesystem::last_write_time(md_path);
-
-    if ((exists && change) && !force_) {
+    if (!force_ && std::filesystem::exists(out_path) &&
+        std::filesystem::last_write_time(out_path) >=
+          std::filesystem::last_write_time(md_path)) {
       V66V("Skipping: ", mf, " (no changes)");
       continue;
     }

@@ -5,7 +5,7 @@ int main(void) {
   verbose = true;
   SSGen ssgen;
   try {
-    ssgen.init_theme("default", "theme");
+    ssgen.init_theme("dark");
     // ssgen.set_force();
     ssgen.generate_site();
   } catch (const std::exception &e) { std::cerr << e.what() << std::endl; }
