@@ -2,6 +2,7 @@
 #define SS_GEN_H
 
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct FMatter {
@@ -10,20 +11,28 @@ struct FMatter {
   std::string tmpl;
 };
 
+struct Theme {
+  std::string name{"default"};
+  std::string theme_dir{"themes/default"};
+};
+
 class SSGen {
 public:
   SSGen(const std::string &main_folder_path   = "content",
         const std::string &public_folder_path = "public");
 
   void generate_site();
+  void init_theme(const std::string &name, const std::string &dir);
 
 private:
   std::string main_folder_;
   std::string public_folder_; /* final html will be generated to be served */
-  std::vector<std::string> md_files_;
-
+  std::vector<std::string>                     md_files_;
+  Theme                                        theme_;
   /* templates */
-  std::string base_;
+  std::unordered_map<std::string, std::string> templates_;
+
+  void load_templates();
 
   FMatter parse_front_matter(std::string &content);
 

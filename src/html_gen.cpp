@@ -163,33 +163,46 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
 /* ------------------------ */
 void HTMLGen::handle_doc_enter() { html_buf_ += "<body>\n"; }
 void HTMLGen::handle_h_enter(MD_BLOCK_H_DETAIL *d) {
-  html_buf_ += "<h" + std::to_string(d->level) + "> ";
+  std::string l = std::to_string(d->level);
+  html_buf_ += "<h" + l + " class=\"rattip-h" + l + "\"> ";
 }
-void HTMLGen::handle_p_enter() { html_buf_ += "<p> "; }
+void HTMLGen::handle_p_enter() { html_buf_ += "<p class=\"rattip-p\"> "; }
 void HTMLGen::handle_html_enter() { html_buf_ += ""; }
 void HTMLGen::handle_ul_enter(MD_BLOCK_UL_DETAIL *d) {
   is_tight_ = d->is_tight;
-  html_buf_ += "<ul>\n";
+  html_buf_ += "<ul class=\"rattip-ul\">\n";
 }
 void HTMLGen::handle_ol_enter(MD_BLOCK_OL_DETAIL *d) {
   this->is_tight_ = d->is_tight;
-  html_buf_ += "<ol>\n";
+  html_buf_ += "<ol class=\"rattip-ol\">\n";
 }
-void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) { html_buf_ += "<li> "; }
-void HTMLGen::handle_hr_enter() { html_buf_ += "<hr>"; }
+void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) {
+  html_buf_ += "<li class=\"rattip-li\"> ";
+}
+void HTMLGen::handle_hr_enter() { html_buf_ += "<hr class=\"rattip-hr\">"; }
 void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
-  html_buf_ += "<pre><code class=\"lang-" +
+  html_buf_ += "<pre class=\"rattip-pre\"><code class=\"rattip-code lang-" +
                std::string(d->lang.text, d->lang.size) + "\">\n";
 }
-void HTMLGen::handle_quote_enter() { html_buf_ += "<blockquote> "; }
-void HTMLGen::handle_table_enter(MD_BLOCK_TABLE_DETAIL *d) {
-  html_buf_ += "<table>\n";
+void HTMLGen::handle_quote_enter() {
+  html_buf_ += "<blockquote class=\"rattip-blockquote\"> ";
 }
-void HTMLGen::handle_thead_enter() { html_buf_ += "<thead>"; }
-void HTMLGen::handle_tbody_enter() { html_buf_ += "<tbody>"; }
-void HTMLGen::handle_tr_enter() { html_buf_ += "<tr>"; }
-void HTMLGen::handle_th_enter(MD_BLOCK_TD_DETAIL *d) { html_buf_ += "<th>"; }
-void HTMLGen::handle_td_enter(MD_BLOCK_TD_DETAIL *d) { html_buf_ += "<td>"; }
+void HTMLGen::handle_table_enter(MD_BLOCK_TABLE_DETAIL *d) {
+  html_buf_ += "<table class=\"rattip-table\">\n";
+}
+void HTMLGen::handle_thead_enter() {
+  html_buf_ += "<thead class=\"rattip-thead\">";
+}
+void HTMLGen::handle_tbody_enter() {
+  html_buf_ += "<tbody class=\"rattip-tbody\">";
+}
+void HTMLGen::handle_tr_enter() { html_buf_ += "<tr class=\"rattip-tr\">"; }
+void HTMLGen::handle_th_enter(MD_BLOCK_TD_DETAIL *d) {
+  html_buf_ += "<th class=\"rattip-th\">";
+}
+void HTMLGen::handle_td_enter(MD_BLOCK_TD_DETAIL *d) {
+  html_buf_ += "<td class=\"rattip-td\">";
+}
 
 /* ------------------------ */
 /* handlers for leave_block */
@@ -211,6 +224,7 @@ void HTMLGen::handle_ol_leave() { html_buf_ += "</ol>\n"; }
 void HTMLGen::handle_li_leave() { html_buf_ += " </li>\n"; }
 void HTMLGen::handle_hr_leave() { html_buf_ += "\n"; }
 void HTMLGen::handle_code_leave() { html_buf_ += "</code></pre>\n"; }
+void HTMLGen::handle_quote_leave() { html_buf_ += "</blockquote>\n"; }
 void HTMLGen::handle_table_leave() { html_buf_ += "</table>\n"; }
 void HTMLGen::handle_thead_leave() { html_buf_ += "</thead>\n"; }
 void HTMLGen::handle_tbody_leave() { html_buf_ += "</tbody>\n"; }
@@ -221,20 +235,28 @@ void HTMLGen::handle_td_leave() { html_buf_ += "</td>\n"; }
 /* ----------------------- */
 /* handlers for enter_span */
 /* ----------------------- */
-void HTMLGen::handle_em_enter() { html_buf_ += " <i> "; }
-void HTMLGen::handle_strong_enter() { html_buf_ += " <b> "; }
-void HTMLGen::handle_backtick_enter() { html_buf_ += " <code> "; }
+void HTMLGen::handle_em_enter() { html_buf_ += " <i class=\"rattip-i\"> "; }
+void HTMLGen::handle_strong_enter() { html_buf_ += " <b class=\"rattip-b\"> "; }
+void HTMLGen::handle_backtick_enter() {
+  html_buf_ += " <code class=\"rattip-code\"> ";
+}
 void HTMLGen::handle_link_enter(MD_SPAN_A_DETAIL *d) {
-  html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) + "\"> " +
+  html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) +
+               "\" class=\"rattip-a\"> " +
                std::string(d->title.text, d->title.size);
 }
 void HTMLGen::handle_img_enter(MD_SPAN_IMG_DETAIL *d) {
-  html_buf_ += "<img src=\"" + std::string(d->src.text, d->src.size) + "\"> " +
-               std::string(d->title.text, d->title.size);
+  html_buf_ += "<img src=\"" + std::string(d->src.text, d->src.size) +
+               "\" class=\"rattip-img\" alt=\"";
 }
-void HTMLGen::handle_quote_leave() { html_buf_ += "</blockquote>\n"; }
-void HTMLGen::handle_del_enter() { html_buf_ += "<del> "; }
-void HTMLGen::handle_u_enter() { html_buf_ += " <u> "; }
+void HTMLGen::handle_del_enter() { html_buf_ += "<del class=\"rattip-del\"> "; }
+void HTMLGen::handle_u_enter() { html_buf_ += " <u class=\"rattip-u\"> "; }
+void HTMLGen::handle_superscript_enter() {
+  html_buf_ += "<sup class=\"rattip-sup\">";
+}
+void HTMLGen::handle_subscript_enter() {
+  html_buf_ += "<sub class=\"rattip-sub\">";
+}
 
 /* ----------------------- */
 /* handlers for leave_span */
@@ -243,11 +265,11 @@ void HTMLGen::handle_em_leave() { html_buf_ += " </i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += " </b> "; }
 void HTMLGen::handle_backtick_leave() { html_buf_ += " </code> "; }
 void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
-void HTMLGen::handle_img_leave() { html_buf_ += " </img>"; }
+void HTMLGen::handle_img_leave() { html_buf_ += "\" />"; }
 void HTMLGen::handle_del_leave() { html_buf_ += " </del>"; }
 void HTMLGen::handle_u_leave() { html_buf_ += " </u> "; }
-void HTMLGen::handle_superscript_enter() { html_buf_ += "<sup>"; }
-void HTMLGen::handle_subscript_enter() { html_buf_ += "<sub>"; }
+void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
+void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }
 
 /* ----------------- */
 /* handlers for text */
@@ -262,5 +284,3 @@ void HTMLGen::handle_html_text(const MD_CHAR *text, MD_SIZE size) {
 void HTMLGen::handle_code_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
-void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
-void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }
