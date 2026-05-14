@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -82,7 +83,8 @@ void serve(const std::string public_dir, int port,
       continue;
     }
 
-    std::string   fpath = public_dir + path;
+    std::string fpath = public_dir + path;
+    if (std::filesystem::is_directory(fpath)) { fpath += "/index.html"; }
     std::ifstream inf(fpath, std::ios::binary);
 
     if (!inf) {

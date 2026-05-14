@@ -171,8 +171,8 @@ FMatter SSGen::parse_front_matter(std::string &content) {
     : key == "date"     ? fm.date     = val
     : key == "template" ? fm.tmpl = val
                         : "";
-    if (fm.tmpl.empty()) { fm.tmpl = "page"; }
   }
+  if (fm.tmpl.empty()) { fm.tmpl = "page"; }
   if (!start) { return fm; }
   content = std::string(std::istreambuf_iterator<char>(ss), {});
   V66V("Front Matter parsed successfully!\n");
