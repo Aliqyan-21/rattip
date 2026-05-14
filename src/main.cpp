@@ -12,9 +12,14 @@ int main(void) {
     ssgen.generate_site();
   } catch (const std::exception &e) { std::cerr << e.what() << std::endl; }
 
-  std::thread watcher([&ssgen]() { ssgen.watch_and_regen(); });
+  std::atomic<bool> reload_flag = false;
 
-  serve("public", 2020);
+  std::thread watcher([&]() {
+    ssgen.watch_and_regen(reload_flag);
+    reload_flag = true;
+  });
+
+  serve("public", 2020, &reload_flag);
   watcher.join();
   return 0;
 }

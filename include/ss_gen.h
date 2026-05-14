@@ -3,6 +3,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <atomic>
 #include <vector>
 
 struct FMatter {
@@ -24,7 +25,7 @@ public:
 
   void generate_site();
   void init_theme(const std::string &name);
-  void watch_and_regen();
+  void watch_and_regen(std::atomic<bool> &reload_flag);
   void set_force();
 
 private:
