@@ -2,9 +2,12 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <thread>
 
 std::string get_mime_type(const std::string &path) {
   if (path.ends_with(".html")) { return "text/html"; }
@@ -19,7 +22,8 @@ std::string get_mime_type(const std::string &path) {
   return "text/plain";
 }
 
-void serve(const std::string public_dir, int port) {
+void serve(const std::string public_dir, int port,
+           std::atomic<bool> *reload_flag) {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if (fd == -1) {
     std::cerr << "Socket failed!" << std::endl;
@@ -57,9 +61,30 @@ void serve(const std::string public_dir, int port) {
     std::string       method, path;
     req >> method >> path;
 
-    if (path == "/") { path = "/index.html"; }
+    if (path == "/livereload" && reload_flag) {
+      std::thread([cfd, reload_flag]() {
+        std::string headers =
+          "HTTP/1.1 200 OK\r\n"
+          "Content-Type: text/event-stream\r\n"
+          "Cache-Control: no-cache\r\n"
+          "\r\n";
+        send(cfd, headers.c_str(), headers.size(), 0);
+        while (true) {
+          if (reload_flag->load()) {
+            std::string msg = "data: reload\n\n";
+            send(cfd, msg.c_str(), msg.size(), 0);
+            reload_flag->store(false);
+            break;
+          }
+          std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+        close(cfd);
+      }).detach();
+      continue;
+    }
 
-    std::string   fpath = public_dir + path;
+    std::string fpath = public_dir + path;
+    if (std::filesystem::is_directory(fpath)) { fpath += "/index.html"; }
     std::ifstream inf(fpath, std::ios::binary);
 
     if (!inf) {
@@ -77,6 +102,13 @@ void serve(const std::string public_dir, int port) {
       std::string content((std::istreambuf_iterator<char>(inf)),
                           std::istreambuf_iterator<char>());
       std::string mime = get_mime_type(fpath);
+      if (mime == "text/html" && reload_flag) {
+        std::string snippet =
+          "<script>new EventSource('/livereload')"
+          ".onmessage=()=>location.reload()</script>";
+        auto pos = content.rfind("</body>");
+        if (pos != std::string::npos) { content.insert(pos, snippet); }
+      }
       std::string response =
         "HTTP/1.1 200 OK\r\n"
         "Content-Type: " +
