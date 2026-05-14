@@ -6,10 +6,13 @@
 
 /* verbosity
  give program verbosity based on the verbose variable */
-static inline bool verbose = false;
+inline bool verbose = false;
 template <typename... Args>
 static inline void V66V(Args &&...args) {
-  if (verbose) { (std::cout << ... << args) << std::endl; }
+  if (verbose) {
+    std::cerr << "[VERB] ";
+    (std::clog << ... << args) << std::endl;
+  }
 }
 
 /* load file and return its contents as std::string */

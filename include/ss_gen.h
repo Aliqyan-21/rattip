@@ -24,6 +24,7 @@ public:
 
   void generate_site();
   void init_theme(const std::string &name, const std::string &dir);
+  void set_force();
 
 private:
   std::string main_dir_;
@@ -33,6 +34,8 @@ private:
   Theme                                        theme_;
   /* templates */
   std::unordered_map<std::string, std::string> templates_;
+
+  bool force_{false};  // force generation of all files
 
   void load_templates();
 
