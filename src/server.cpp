@@ -87,7 +87,12 @@ void serve(const std::string public_dir, int port) {
         "\r\n"
         "\r\n" +
         content;
-      send(cfd, response.c_str(), response.size(), 0);
+      size_t sent = 0;
+      while (sent < response.size()) {
+        int n = send(cfd, response.c_str(), response.size(), 0);
+        if (n <= 0) { break; }
+        sent += n;
+      }
     }
     close(cfd);
   }
