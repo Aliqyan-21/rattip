@@ -24,6 +24,7 @@ public:
 
   void generate_site();
   void init_theme(const std::string &name);
+  void watch_and_regen();
   void set_force();
 
 private:

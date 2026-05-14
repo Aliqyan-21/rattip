@@ -1,6 +1,8 @@
 #include "ss_gen.h"
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <thread>
 #include "html_gen.h"
 #include "utils.hpp"
 
@@ -28,6 +30,33 @@ SSGen::SSGen(const std::string &main_dir_path,
 void SSGen::generate_site() {
   content_walker();
   generate_html();
+}
+
+/* watch for any change (file saved) in main_dir_ */
+void SSGen::watch_and_regen() {
+  std::unordered_map<std::string, std::filesystem::file_time_type>
+    snaps;  // [name : time last changed]
+
+  for (auto const &en :
+       std::filesystem::recursive_directory_iterator(main_dir_)) {
+    if (en.path().extension() == ".md") {
+      snaps[en.path()] = std::filesystem::last_write_time(en.path());
+    }
+  }
+
+  while (true) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    for (auto const &en :
+         std::filesystem::recursive_directory_iterator(main_dir_)) {
+      if (en.path().extension() != ".md") { continue; }
+      auto ct = std::filesystem::last_write_time(en.path());
+      if (ct != snaps[en.path()]) {
+        snaps[en.path()] = ct;
+        V66V("Change detected: ", en.path().string());
+      }
+    }
+  }
 }
 
 /* collect all the md files from the main_folder */
