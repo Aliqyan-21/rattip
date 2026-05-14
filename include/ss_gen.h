@@ -1,9 +1,9 @@
 #ifndef SS_GEN_H
 #define SS_GEN_H
 
+#include <atomic>
 #include <string>
 #include <unordered_map>
-#include <atomic>
 #include <vector>
 
 struct FMatter {
