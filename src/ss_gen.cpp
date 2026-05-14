@@ -54,6 +54,7 @@ void SSGen::watch_and_regen() {
       if (ct != snaps[en.path()]) {
         snaps[en.path()] = ct;
         V66V("Change detected: ", en.path().string());
+        generate_html();
       }
     }
   }
