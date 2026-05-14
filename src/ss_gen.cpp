@@ -8,6 +8,9 @@ SSGen::SSGen(const std::string &main_folder_path,
              const std::string &public_folder_path)
   : main_folder_(main_folder_path), public_folder_(public_folder_path) {
   load_templates();
+  std::filesystem::copy("assets", public_folder_ + "/assets",
+                        std::filesystem::copy_options::recursive |
+                          std::filesystem::copy_options::overwrite_existing);
 }
 
 /*
@@ -34,6 +37,9 @@ void SSGen::content_walker() {
 void SSGen::init_theme(const std::string &name, const std::string &dir) {
   theme_.name      = name;
   theme_.theme_dir = dir;
+  std::filesystem::copy("themes/dark", public_folder_ + "/styles/",
+                        std::filesystem::copy_options::recursive |
+                          std::filesystem::copy_options::overwrite_existing);
 }
 
 void SSGen::generate_html() {
