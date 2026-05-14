@@ -6,6 +6,7 @@ int main(void) {
   SSGen ssgen;
   try {
     ssgen.init_theme("default", "theme");
+    // ssgen.set_force();
     ssgen.generate_site();
   } catch (const std::exception &e) { std::cerr << e.what() << std::endl; }
   return 0;

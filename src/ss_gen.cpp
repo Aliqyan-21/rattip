@@ -53,6 +53,20 @@ void SSGen::generate_html() {
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
 
   for (const std::string &mf : md_files_) {
+    std::filesystem::path md_path(mf);
+    std::filesystem::path rel = std::filesystem::relative(md_path, main_dir_);
+    std::filesystem::path out_path = std::filesystem::path(public_dir_) / rel;
+    out_path.replace_extension(".html");
+
+    bool exists = std::filesystem::exists(out_path);
+    bool change = std::filesystem::last_write_time(out_path) >=
+                  std::filesystem::last_write_time(md_path);
+
+    if ((exists && change) && !force_) {
+      V66V("Skipping: ", mf, " (no changes)");
+      continue;
+    }
+
     std::string content = load_file(mf);
     FMatter     fm      = parse_front_matter(content);
     HTMLGen     generator(content, flags);
@@ -149,4 +163,10 @@ void SSGen::load_templates() {
     std::string fn = en.path().filename().stem();
     templates_[fn] = load_file(en.path());
   }
+}
+
+void SSGen::set_force() {
+  V66V(
+    "Force option set, so html will be generated for all the markdown files\n");
+  force_ = true;
 }
