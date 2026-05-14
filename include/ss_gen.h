@@ -18,15 +18,17 @@ struct Theme {
 
 class SSGen {
 public:
-  SSGen(const std::string &main_folder_path   = "content",
-        const std::string &public_folder_path = "public");
+  SSGen(const std::string &main_dir_path   = "content",
+        const std::string &public_dir_path = "public",
+        const std::string &assets_dir      = "assets");
 
   void generate_site();
   void init_theme(const std::string &name, const std::string &dir);
 
 private:
-  std::string main_folder_;
-  std::string public_folder_; /* final html will be generated to be served */
+  std::string main_dir_;
+  std::string public_dir_; /* final html will be generated to be served */
+  std::string assets_dir_;
   std::vector<std::string>                     md_files_;
   Theme                                        theme_;
   /* templates */
