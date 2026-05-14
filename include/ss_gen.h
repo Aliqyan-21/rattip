@@ -22,8 +22,7 @@ public:
         const std::string &public_folder_path = "public");
 
   void generate_site();
-  void init_theme(const std::string &name, const std::string &dir,
-                  const std::string &conf_file);
+  void init_theme(const std::string &name, const std::string &dir);
 
 private:
   std::string main_folder_;

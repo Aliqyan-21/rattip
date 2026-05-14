@@ -31,8 +31,7 @@ void SSGen::content_walker() {
 }
 
 /* intialize theme struct object */
-void SSGen::init_theme(const std::string &name, const std::string &dir,
-                       const std::string &conf_file) {
+void SSGen::init_theme(const std::string &name, const std::string &dir) {
   theme_.name      = name;
   theme_.theme_dir = dir;
 }
