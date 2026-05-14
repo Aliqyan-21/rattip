@@ -4,13 +4,19 @@
 #include "html_gen.h"
 #include "utils.hpp"
 
-SSGen::SSGen(const std::string &main_folder_path,
-             const std::string &public_folder_path)
-  : main_folder_(main_folder_path), public_folder_(public_folder_path) {
+SSGen::SSGen(const std::string &main_dir_path,
+             const std::string &public_dir_path, const std::string &assets_dir)
+  : main_dir_(main_dir_path),
+    public_dir_(public_dir_path),
+    assets_dir_(assets_dir) {
   load_templates();
-  std::filesystem::copy("assets", public_folder_ + "/assets",
-                        std::filesystem::copy_options::recursive |
-                          std::filesystem::copy_options::overwrite_existing);
+  if (std::filesystem::exists(std::filesystem::path(assets_dir_))) {
+    std::filesystem::copy(assets_dir_, public_dir_ + "/" + assets_dir_,
+                          std::filesystem::copy_options::recursive |
+                            std::filesystem::copy_options::overwrite_existing);
+  } else {
+    std::cerr << "The assets dir does not exists: " << assets_dir_ << std::endl;
+  }
 }
 
 /*
@@ -26,7 +32,7 @@ void SSGen::generate_site() {
 /* collect all the md files from the main_folder */
 void SSGen::content_walker() {
   for (const std::filesystem::directory_entry &en :
-       std::filesystem::recursive_directory_iterator(main_folder_)) {
+       std::filesystem::recursive_directory_iterator(main_dir_)) {
     if (en.is_regular_file() && en.path().extension() == ".md") {
       md_files_.push_back(en.path());
     }
@@ -37,7 +43,7 @@ void SSGen::content_walker() {
 void SSGen::init_theme(const std::string &name, const std::string &dir) {
   theme_.name      = name;
   theme_.theme_dir = dir;
-  std::filesystem::copy("themes/dark", public_folder_ + "/styles/",
+  std::filesystem::copy("themes/dark", public_dir_ + "/styles/",
                         std::filesystem::copy_options::recursive |
                           std::filesystem::copy_options::overwrite_existing);
 }
@@ -59,8 +65,8 @@ void SSGen::save_html_file(const std::string &html_content,
                            const FMatter     &front_matter,
                            const std::string &md_file) {
   std::filesystem::path md_path(md_file);
-  std::filesystem::path rel = std::filesystem::relative(md_path, main_folder_);
-  std::filesystem::path out_path = std::filesystem::path(public_folder_) / rel;
+  std::filesystem::path rel = std::filesystem::relative(md_path, main_dir_);
+  std::filesystem::path out_path = std::filesystem::path(public_dir_) / rel;
   out_path.replace_extension(".html");
   std::filesystem::create_directories(out_path.parent_path());
   auto        it = templates_.find(front_matter.tmpl);
