@@ -14,3 +14,6 @@ const char *RappitError::what() const noexcept { return msg_.c_str(); }
 
 RuntimeError::RuntimeError(const std::string &msg, const std::string &ctx)
   : RappitError("[Runtime Error] " + msg, ctx) {}
+
+ServerError::ServerError(const std::string &msg, const std::string &ctx)
+  : RappitError("[Server Error] " + msg, ctx) {}

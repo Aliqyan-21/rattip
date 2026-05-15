@@ -1,7 +1,10 @@
 #include "server.h"
+#include <error.h>
 #include <netinet/in.h>
+#include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <cerrno>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -25,23 +28,21 @@ std::string get_mime_type(const std::string &path) {
 void serve(const std::string public_dir, int port,
            std::atomic<bool> *reload_flag) {
   int fd = socket(AF_INET, SOCK_STREAM, 0);
-  if (fd == -1) {
-    std::cerr << "Socket failed!" << std::endl;
-    return;
-  }
+  if (fd == -1) { throw ServerError("Socket failed!", strerror(errno)); }
 
   int opt = 1;
   setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
   sockaddr_in sin = {AF_INET, htons(port), {INADDR_ANY}};
   if (bind(fd, (sockaddr *)&sin, sizeof(sin)) == -1) {
-    std::cerr << "Bind failed!" << std::endl;
-    return;
+    throw ServerError("Binding to port failed!",
+                      "Port " + std::to_string(port) + " - " +
+                        std::string(strerror(errno)) +
+                        "\n  Try changing the port.");
   }
 
   if (listen(fd, 10) == -1) {
-    std::cerr << "Listen failed!" << std::endl;
-    return;
+    throw ServerError("Listen failed!", strerror(errno));
   }
 
   std::clog << "Serving on http://localhost:" << port << std::endl;

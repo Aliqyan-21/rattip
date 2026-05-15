@@ -20,4 +20,9 @@ public:
   explicit RuntimeError(const std::string &msg, const std::string &ctx = "");
 };
 
+class ServerError : public RappitError {
+public:
+  explicit ServerError(const std::string &msg, const std::string &ctx = "");
+};
+
 #endif  //! ERROR_H
