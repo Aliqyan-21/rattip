@@ -1,6 +1,7 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <error.h>
 #include <fstream>
 #include <iostream>
 
@@ -10,7 +11,7 @@ inline bool verbose = false;
 template <typename... Args>
 static inline void V66V(Args &&...args) {
   if (verbose) {
-    std::cerr << "[VERB] ";
+    std::clog << "[VERB] ";
     (std::clog << ... << args) << std::endl;
   }
 }
@@ -18,10 +19,7 @@ static inline void V66V(Args &&...args) {
 /* load file and return its contents as std::string */
 inline std::string load_file(const std::string &filepath) {
   std::ifstream inf(filepath);
-  if (!inf) {
-    std::cerr << "File not found: " << filepath << std::endl;
-    exit(1);
-  }
+  if (!inf) { throw RuntimeError("File not found: " + filepath); }
   std::string content((std::istreambuf_iterator<char>(inf)),
                       std::istreambuf_iterator<char>());
   inf.close();
