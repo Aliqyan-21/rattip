@@ -13,8 +13,8 @@ struct FMatter {
 };
 
 struct Theme {
-  std::string name{"default"};
-  std::string theme_dir{"themes/default"};
+  std::string name;
+  std::string theme_dir;
 };
 
 class SSGen {
@@ -24,7 +24,8 @@ public:
         const std::string &assets_dir      = "assets");
 
   void generate_site();
-  void init_theme(const std::string &name);
+  void init_theme(const std::string &name      = "dark",
+                  const std::string &theme_dir = "themes");
   void watch_and_regen(std::atomic<bool> &reload_flag);
   void set_force();
 

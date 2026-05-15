@@ -72,11 +72,13 @@ void SSGen::content_walker() {
 }
 
 /* intialize theme struct object */
-void SSGen::init_theme(const std::string &name) {
-  theme_.name = name;
-  std::filesystem::copy("themes/" + name, public_dir_ + "/styles/",
+void SSGen::init_theme(const std::string &name, const std::string &theme_dir) {
+  theme_.name      = name;
+  theme_.theme_dir = theme_dir;
+  std::filesystem::copy(theme_.theme_dir + "/" + name, public_dir_ + "/styles/",
                         std::filesystem::copy_options::recursive |
                           std::filesystem::copy_options::overwrite_existing);
+  V66V("Theme loaded successfully\n");
 }
 
 void SSGen::generate_html() {
