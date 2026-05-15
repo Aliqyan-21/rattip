@@ -18,7 +18,7 @@ SSGen::SSGen(const std::string &main_dir_path,
                           std::filesystem::copy_options::recursive |
                             std::filesystem::copy_options::overwrite_existing);
   } else {
-    std::cerr << "The assets dir does not exists: " << assets_dir_ << std::endl;
+    V66V("Skipping loading ", assets_dir_, "\nDoes not exists.");
   }
 }
 
@@ -182,7 +182,8 @@ FMatter SSGen::parse_front_matter(std::string &content) {
 void SSGen::load_templates() {
   if (!std::filesystem::exists(std::filesystem::path("templates")) ||
       std::filesystem::is_empty(std::filesystem::path("templates"))) {
-    std::cerr << "templates folder is empty, html files formed will be without "
+    std::cerr << "templates folder is empty or does not exists, html files "
+                 "formed will be without "
                  "templates"
               << std::endl;
     return;
