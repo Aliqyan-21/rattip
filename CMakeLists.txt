@@ -20,12 +20,14 @@ set(SOURCES
   src/html_gen.cpp
   src/ss_gen.cpp
   src/server.cpp
+  src/error.cpp
 )
 
 set(HEADERS
   include/html_gen.h
   include/ss_gen.h
   include/server.h
+  include/error.h
 )
 
 set(EXTERNALS
