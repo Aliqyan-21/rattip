@@ -10,7 +10,7 @@ struct Args {
   bool        no_gen{false};
   std::string main_dir{"content"};
   std::string public_dir{"public"};
-  std::string assets_dir{"assets"};
+  std::string assets_dir{""};
   std::string theme_dir{"themes"};
   std::string theme_name{"dark"};
   bool        force{false};

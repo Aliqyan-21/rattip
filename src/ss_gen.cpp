@@ -11,14 +11,7 @@ SSGen::SSGen(const std::string &main_dir_path,
   : main_dir_(main_dir_path),
     public_dir_(public_dir_path),
     assets_dir_(assets_dir) {
-  std::filesystem::create_directory(public_dir_path);
-  if (std::filesystem::exists(std::filesystem::path(assets_dir_))) {
-    std::filesystem::copy(assets_dir_, public_dir_ + "/" + assets_dir_,
-                          std::filesystem::copy_options::recursive |
-                            std::filesystem::copy_options::overwrite_existing);
-  } else {
-    V66V("Skipping loading ", assets_dir_, "\nDoes not exists.");
-  }
+  std::filesystem::create_directory(public_dir_);
 }
 
 /*
@@ -77,7 +70,7 @@ void SSGen::init_theme(const std::string &name, const std::string &theme_dir) {
   std::filesystem::copy(theme_.theme_dir + "/" + name, public_dir_ + "/styles/",
                         std::filesystem::copy_options::recursive |
                           std::filesystem::copy_options::overwrite_existing);
-  V66V("Theme ", theme_.name, " loaded successfully\n");
+  V66V("Theme '", theme_.name, "' loaded successfully\n");
 }
 
 void SSGen::generate_html() {
@@ -193,6 +186,18 @@ void SSGen::load_templates() {
        std::filesystem::recursive_directory_iterator("templates")) {
     std::string fn = en.path().filename().stem();
     templates_[fn] = load_file(en.path());
+  }
+}
+
+void SSGen::load_assets() {
+  if (std::filesystem::exists(std::filesystem::path(assets_dir_))) {
+    std::filesystem::copy(assets_dir_, public_dir_ + "/" + assets_dir_,
+                          std::filesystem::copy_options::recursive |
+                            std::filesystem::copy_options::overwrite_existing);
+    V66V("Assets loaded successfully from '", assets_dir_, "'");
+  } else {
+    V66V("Skipping loading assets '", assets_dir_,
+         "' - Does not exists.(see -h (--assets))");
   }
 }
 

@@ -27,6 +27,7 @@ public:
   void watch_and_regen(std::atomic<bool> &reload_flag);
   void set_force();
   void load_templates();
+  void load_assets();
 
 private:
   std::string main_dir_;

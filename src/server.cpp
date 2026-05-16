@@ -27,6 +27,11 @@ std::string get_mime_type(const std::string &path) {
 
 void serve(const std::string public_dir, int port,
            std::atomic<bool> *reload_flag) {
+  if (!std::filesystem::exists(std::filesystem::path(public_dir))) {
+    throw ServerError(
+      "Dir '" + public_dir + "' does not exist to serve",
+      "Make sure u have generated the html, or giving the right public dir");
+  }
   int fd = socket(AF_INET, SOCK_STREAM, 0);
   if (fd == -1) { throw ServerError("Socket failed!", strerror(errno)); }
 

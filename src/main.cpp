@@ -11,9 +11,10 @@ int main(int argc, char *argv[]) {
   SSGen ssg(args.main_dir, args.public_dir, args.assets_dir);
   try {
     if (!args.no_gen) {
+      if (args.force) { ssg.set_force(); }
       ssg.load_templates();
       ssg.init_theme(args.theme_name, args.theme_dir);
-      if (args.force) { ssg.set_force(); }
+      ssg.load_assets();
       ssg.generate_site();
     }
 
