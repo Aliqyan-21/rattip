@@ -161,7 +161,7 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
 /* ------------------------ */
 /* handlers for enter_block */
 /* ------------------------ */
-void HTMLGen::handle_doc_enter() { html_buf_ += "<body>\n"; }
+void HTMLGen::handle_doc_enter() { /* html_buf_ += "<body>\n"; */ }
 void HTMLGen::handle_h_enter(MD_BLOCK_H_DETAIL *d) {
   std::string l = std::to_string(d->level);
   html_buf_ += "<h" + l + " class=\"rattip-h" + l + "\"> ";
@@ -207,7 +207,7 @@ void HTMLGen::handle_td_enter(MD_BLOCK_TD_DETAIL *d) {
 /* ------------------------ */
 /* handlers for leave_block */
 /* ------------------------ */
-void HTMLGen::handle_doc_leave() { html_buf_ += "</body>"; }
+void HTMLGen::handle_doc_leave() { /* html_buf_ += "</body>"; */ }
 void HTMLGen::handle_h_leave(MD_BLOCK_H_DETAIL *d) {
   html_buf_ += " </h" + std::to_string(d->level) + ">\n";
 }
