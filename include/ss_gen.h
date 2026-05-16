@@ -35,10 +35,16 @@ private:
   std::string public_dir_; /* final html will be generated to be served */
   std::string template_dir_;
   std::string assets_dir_;
-  std::vector<std::string>                     md_files_;
-  Theme                                        theme_;
+  std::vector<std::tuple<std::string, std::string, FMatter>>
+        files_; /* [md_file, content, front_matter] */
+  Theme theme_;
+
   /* templates */
   std::unordered_map<std::string, std::string> templates_;
+
+  std::vector<std::pair<std::string, std::string>>
+              nav_pages_; /* [title, url] */
+  std::string navbar_;
 
   bool force_{false};  // force generation of all files
 

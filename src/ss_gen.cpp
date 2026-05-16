@@ -60,9 +60,27 @@ void SSGen::content_walker() {
   for (const std::filesystem::directory_entry &en :
        std::filesystem::recursive_directory_iterator(main_dir_)) {
     if (en.is_regular_file() && en.path().extension() == ".md") {
-      md_files_.push_back(en.path());
+      // md_files_.push_back(en.path());
+      std::string content = load_file(en.path());
+      FMatter     fm      = parse_front_matter(content, en.path());
+      files_.push_back({en.path(), content, fm});
+
+      if (fm.nav) {
+        std::filesystem::path rel =
+          std::filesystem::relative(en.path(), main_dir_);
+        std::filesystem::path url = std::filesystem::path("/") / rel;
+        url.replace_extension(".html");
+        nav_pages_.push_back({fm.title, url.string()});
+      }
     }
   }
+
+  navbar_ = "<nav class=\"rattip-nav\">\n";
+  for (auto &item : nav_pages_) {
+    navbar_ += "  <a href=\"" + item.first + "\" class=\"rattip-nav-a\">" +
+               item.second + "</a>\n";
+  }
+  navbar_ += "</nav>";
 }
 
 /* intialize theme struct object */
@@ -79,7 +97,7 @@ void SSGen::generate_html() {
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
 
-  for (const std::string &mf : md_files_) {
+  for (const auto &[mf, content, fm] : files_) {
     std::filesystem::path md_path(mf);
     std::filesystem::path rel = std::filesystem::relative(md_path, main_dir_);
     std::filesystem::path out_path = std::filesystem::path(public_dir_) / rel;
@@ -92,9 +110,7 @@ void SSGen::generate_html() {
       continue;
     }
 
-    std::string content = load_file(mf);
-    FMatter     fm      = parse_front_matter(content, mf);
-    HTMLGen     generator(content, flags);
+    HTMLGen generator(content, flags);
     generator.parse_markdown();
     save_html_file(generator.get_html(), fm, mf);
   }
