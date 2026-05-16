@@ -182,7 +182,8 @@ void SSGen::load_templates() {
   if (!std::filesystem::exists(std::filesystem::path(template_dir_)) ||
       std::filesystem::is_empty(std::filesystem::path(template_dir_))) {
     throw SSGError("Templates directory '" + template_dir_ +
-                   "' is empty or does not exists (see -h (--templates))");
+                     "' is empty or does not exists (see -h (--templates))",
+                   "Try rattip --init");
   }
   for (auto const &en :
        std::filesystem::recursive_directory_iterator(template_dir_)) {

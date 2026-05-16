@@ -1,4 +1,5 @@
 #include <thread>
+#include "rattip_init.hpp"
 #include "server.h"
 #include "ss_gen.h"
 #include "utils.hpp"
@@ -11,6 +12,10 @@ int main(int argc, char *argv[]) {
   SSGen ssg(args.main_dir, args.public_dir, args.templates_dir,
             args.assets_dir);
   try {
+    if (args.init) {
+      rattip_init();
+      return 0;
+    }
     if (!args.no_gen) {
       if (args.force) { ssg.set_force(); }
       ssg.load_templates();
