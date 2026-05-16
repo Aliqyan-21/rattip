@@ -48,6 +48,10 @@ void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
       if (ct != snaps[en.path()]) {
         snaps[en.path()] = ct;
         V66V("Change detected: ", en.path().string());
+        files_.clear();
+        nav_pages_.clear();
+        navbar_.clear();
+        content_walker();
         generate_html();
         reload_flag = true;
       }
