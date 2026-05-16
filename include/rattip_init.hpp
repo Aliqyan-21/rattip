@@ -40,7 +40,7 @@ static const char *BLOG_HTML = R"(
 </head>
 
 <body>
-  <header class="rattip--header">
+  <header class="rattip-header">
     <span class="rattip-date">{blog_date}</span>
   </header>
 
