@@ -114,8 +114,8 @@ void SSGen::save_html_file(const std::string &html_content,
     tmpl = it->second;
   } else {
     throw SSGError("Could not find the template for: " + front_matter.tmpl,
-                       "fix front matter if template name is wrong, or add the "
-                       "required template");
+                   "fix front matter if template name is wrong, or add the "
+                   "required template");
     tmpl = templates_[templates_.begin()->first];
   }
   std::ofstream of(out_path);
@@ -170,7 +170,7 @@ FMatter SSGen::parse_front_matter(std::string       &content,
   }
   if (fm.tmpl.empty()) {
     throw SSGError("No template field found in front_matter of: " + md_file,
-                       "fix it.");
+                   "fix it.");
   }
   if (!start) { return fm; }
   content = std::string(std::istreambuf_iterator<char>(ss), {});
@@ -181,8 +181,8 @@ FMatter SSGen::parse_front_matter(std::string       &content,
 void SSGen::load_templates() {
   if (!std::filesystem::exists(std::filesystem::path(template_dir_)) ||
       std::filesystem::is_empty(std::filesystem::path(template_dir_))) {
-    throw SSGError(
-      "Templates folder is empty or does not exists (see -h (--templates))");
+    throw SSGError("Templates directory '" + template_dir_ +
+                   "' is empty or does not exists (see -h (--templates))");
   }
   for (auto const &en :
        std::filesystem::recursive_directory_iterator(template_dir_)) {
