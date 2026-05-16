@@ -33,6 +33,7 @@ set(HEADERS
 set(EXTERNALS
   external/md4c.h
   external/md4c.c
+  external/argh.h
 )
 
 set(COMPILE_FLAGS_DEBUG -Wall -ggdb3 -O0)
