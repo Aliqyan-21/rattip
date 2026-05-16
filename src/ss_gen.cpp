@@ -77,8 +77,8 @@ void SSGen::content_walker() {
 
   navbar_ = "<nav class=\"rattip-nav\">\n";
   for (auto &item : nav_pages_) {
-    navbar_ += "  <a href=\"" + item.first + "\" class=\"rattip-nav-a\">" +
-               item.second + "</a>\n";
+    navbar_ += "  <a href=\"" + item.second + "\" class=\"rattip-nav-a\">" +
+               item.first + "</a>\n";
   }
   navbar_ += "</nav>";
 }
@@ -143,6 +143,11 @@ void SSGen::save_html_file(const std::string &html_content,
   if ("blog" == front_matter.tmpl) {
     size_t bd = tmpl.find("{blog_date}");
     tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+  }
+  size_t nv = tmpl.find("{navbar}");
+  if (nv != std::string::npos) {
+    tmpl.replace(nv, std::string("{navbar}").size(),
+                 front_matter.nav ? navbar_ : "");
   }
 
   of.write(tmpl.c_str(), tmpl.size());

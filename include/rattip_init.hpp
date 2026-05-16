@@ -17,9 +17,12 @@ static const char *PAGE_HTML = R"(
   <link rel="stylesheet" href="/styles/global.css">
 </head>
 
+<body>
+{navbar}
 {md_content}
-
 <footer class="rattip-footer"> made with ❤️ by rattip</footer>
+</body>
+
 </html>
 )";
 
