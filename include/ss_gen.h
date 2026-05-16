@@ -26,6 +26,7 @@ public:
   void init_theme(const std::string &name, const std::string &theme_dir);
   void watch_and_regen(std::atomic<bool> &reload_flag);
   void set_force();
+  void load_templates();
 
 private:
   std::string main_dir_;
@@ -37,8 +38,6 @@ private:
   std::unordered_map<std::string, std::string> templates_;
 
   bool force_{false};  // force generation of all files
-
-  void load_templates();
 
   FMatter parse_front_matter(std::string &content);
 

@@ -7,6 +7,7 @@
 #include "argh.h"
 
 struct Args {
+  bool        no_gen{false};
   std::string main_dir{"content"};
   std::string public_dir{"public"};
   std::string assets_dir{"assets"};
@@ -25,7 +26,40 @@ inline Args parse(int argc, char *argv[]) {
                    "--theme-dir", "--theme", "-t", "--force", "-f", "--serve",
                    "-s", "--port", "-p", "--verbose", "-v"});
   cmdl.parse(argc, argv, argh::parser::SINGLE_DASH_IS_MULTIFLAG);
-  //todo: fill args
+  if (cmdl[{"--help", "-h"}]) {
+    std::cout
+      << "rattip - static site generator\n\n"
+         "Usage: rattip [options]\n\n"
+         "Options:\n"
+         "  -m, --main <dir>       content directory (default: content)\n"
+         "  -p, --public <dir>     output directory (default: public)\n"
+         "  -a, --assets <dir>     assets directory (default: assets)\n"
+         "  -t, --theme <name>     theme name (default: dark)\n"
+         "      --theme-dir <dir>  themes directory (default: themes)\n"
+         "      --port <port>      server port (default: 8080)\n"
+         "  -f, --force            force regenerate all files\n"
+         "  -s, --serve            generate and serve locally\n"
+         "  -v, --verbose          verbose output\n"
+         "  -n, --no_gen           does not generate html (when u just want to serve)\n"
+         "  -h, --help             show this message\n";
+    exit(0);
+  }
+
+  /* args */
+  cmdl({"--main", "-m"}) >> args.main_dir;
+  cmdl({"--public", "-p"}) >> args.public_dir;
+  cmdl({"--assets", "-a"}) >> args.assets_dir;
+  cmdl({"--theme-dir"}) >> args.theme_dir;
+  cmdl({"--theme", "-t"}) >> args.theme_name;
+  cmdl({"--port"}) >> args.port;
+
+  /* flags */
+  args.force   = cmdl[{"--force", "-f"}];
+  args.serve   = cmdl[{"--serve", "-s"}];
+  args.verbose = cmdl[{"--verbose", "-v"}];
+  args.no_gen  = cmdl[{"--no_gen", "-n"}];
+
+  return args;
 }
 
 /* verbosity
