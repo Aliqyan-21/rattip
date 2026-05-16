@@ -4,6 +4,29 @@
 #include <error.h>
 #include <fstream>
 #include <iostream>
+#include "argh.h"
+
+struct Args {
+  std::string main_dir{"content"};
+  std::string public_dir{"public"};
+  std::string assets_dir{"assets"};
+  std::string theme_dir{"themes"};
+  std::string theme_name{"dark"};
+  bool        force{false};
+  bool        serve{false};
+  int         port{8080};
+  bool        verbose{false};
+};
+
+inline Args parse(int argc, char *argv[]) {
+  Args         args;
+  argh::parser cmdl;
+  cmdl.add_params({"--main", "-m", "--public", "-p", "--assets", "-a",
+                   "--theme-dir", "--theme", "-t", "--force", "-f", "--serve",
+                   "-s", "--port", "-p", "--verbose", "-v"});
+  cmdl.parse(argc, argv, argh::parser::SINGLE_DASH_IS_MULTIFLAG);
+  //todo: fill args
+}
 
 /* verbosity
  give program verbosity based on the verbose variable */

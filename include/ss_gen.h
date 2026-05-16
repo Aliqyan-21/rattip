@@ -19,13 +19,11 @@ struct Theme {
 
 class SSGen {
 public:
-  SSGen(const std::string &main_dir_path   = "content",
-        const std::string &public_dir_path = "public",
-        const std::string &assets_dir      = "assets");
+  SSGen(const std::string &main_dir_path, const std::string &public_dir_path,
+        const std::string &assets_dir);
 
   void generate_site();
-  void init_theme(const std::string &name      = "dark",
-                  const std::string &theme_dir = "themes");
+  void init_theme(const std::string &name, const std::string &theme_dir);
   void watch_and_regen(std::atomic<bool> &reload_flag);
   void set_force();
 
