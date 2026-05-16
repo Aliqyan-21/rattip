@@ -163,10 +163,10 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     std::string key = trim(line.substr(0, pos));
     std::string val = trim(line.substr(pos + 1));
 
-    key == "title"      ? fm.title     = val
-    : key == "date"     ? fm.date     = val
-    : key == "template" ? fm.tmpl = val
-                        : "";
+    key == "title" ? fm.title = val : "";
+    key == "date" ? fm.date = val : "";
+    key == "template" ? fm.tmpl = val : "";
+    key == "nav" ? fm.nav = true : fm.nav = false;
   }
   if (fm.tmpl.empty()) {
     throw SSGError("No template field found in front_matter of: " + md_file,
