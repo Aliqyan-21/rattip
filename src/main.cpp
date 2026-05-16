@@ -8,7 +8,8 @@ int main(int argc, char *argv[]) {
 
   verbose = args.verbose;
 
-  SSGen ssg(args.main_dir, args.public_dir, args.assets_dir);
+  SSGen ssg(args.main_dir, args.public_dir, args.templates_dir,
+            args.assets_dir);
   try {
     if (!args.no_gen) {
       if (args.force) { ssg.set_force(); }
