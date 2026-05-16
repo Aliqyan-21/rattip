@@ -191,7 +191,7 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     key == "title" ? fm.title = val : "";
     key == "date" ? fm.date = val : "";
     key == "template" ? fm.tmpl = val : "";
-    key == "nav" ? fm.nav = (val == "true") : fm.nav = (val == "false");
+    if (key == "nav") { fm.nav = (val == "true"); }
   }
   if (fm.tmpl.empty()) {
     throw SSGError("No template field found in front_matter of: " + md_file,
