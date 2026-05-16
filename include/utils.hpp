@@ -13,21 +13,22 @@ struct Args {
   std::string templates_dir{"templates"};
   std::string assets_dir{""};
   std::string theme_dir{"themes"};
-  std::string theme_name{"dark"};
+  std::string theme_name{"noir"};
   bool        force{false};
   bool        serve{false};
   int         port{8080};
   bool        verbose{false};
+  bool        init{false};
 };
 
 inline Args parse(int argc, char *argv[]) {
   Args         args;
   argh::parser cmdl;
-  cmdl.add_params({"--main",    "-m",       "--public", "-p",
-                   "templates", "--assets", "-a",       "--theme-dir",
-                   "--theme",   "-t",       "--force",  "-f",
-                   "--serve",   "-s",       "--port",   "-p",
-                   "--verbose", "-v",       "--no_gen", "-n"});
+  cmdl.add_params(
+    {"--main",   "-m",          "--public", "-p", "templates", "--assets",
+     "-a",       "--theme-dir", "--theme",  "-t", "--force",   "-f",
+     "--serve",  "-s",          "--port",   "-p", "--verbose", "-v",
+     "--no_gen", "-n",          "--init"});
   cmdl.parse(argc, argv, argh::parser::SINGLE_DASH_IS_MULTIFLAG);
   if (cmdl[{"--help", "-h"}]) {
     std::cout
@@ -46,6 +47,8 @@ inline Args parse(int argc, char *argv[]) {
          "  -v, --verbose          verbose output\n"
          "  -n, --no_gen           does not generate html (when u just want to "
          "serve)\n"
+         "      --init             generates initial setup (themes, templates, "
+         "html)\n"
          "  -h, --help             show this message\n";
     exit(0);
   }
@@ -64,6 +67,7 @@ inline Args parse(int argc, char *argv[]) {
   args.serve   = cmdl[{"--serve", "-s"}];
   args.verbose = cmdl[{"--verbose", "-v"}];
   args.no_gen  = cmdl[{"--no_gen", "-n"}];
+  args.init    = cmdl[{"--init"}];
 
   return args;
 }
