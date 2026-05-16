@@ -40,7 +40,8 @@ inline Args parse(int argc, char *argv[]) {
          "  -f, --force            force regenerate all files\n"
          "  -s, --serve            generate and serve locally\n"
          "  -v, --verbose          verbose output\n"
-         "  -n, --no_gen           does not generate html (when u just want to serve)\n"
+         "  -n, --no_gen           does not generate html (when u just want to "
+         "serve)\n"
          "  -h, --help             show this message\n";
     exit(0);
   }
