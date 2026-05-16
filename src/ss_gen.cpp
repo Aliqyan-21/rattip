@@ -48,6 +48,10 @@ void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
       if (ct != snaps[en.path()]) {
         snaps[en.path()] = ct;
         V66V("Change detected: ", en.path().string());
+        files_.clear();
+        nav_pages_.clear();
+        navbar_.clear();
+        content_walker();
         generate_html();
         reload_flag = true;
       }
@@ -60,9 +64,27 @@ void SSGen::content_walker() {
   for (const std::filesystem::directory_entry &en :
        std::filesystem::recursive_directory_iterator(main_dir_)) {
     if (en.is_regular_file() && en.path().extension() == ".md") {
-      md_files_.push_back(en.path());
+      // md_files_.push_back(en.path());
+      std::string content = load_file(en.path());
+      FMatter     fm      = parse_front_matter(content, en.path());
+      files_.push_back({en.path(), content, fm});
+
+      if (fm.nav) {
+        std::filesystem::path rel =
+          std::filesystem::relative(en.path(), main_dir_);
+        std::filesystem::path url = std::filesystem::path("/") / rel;
+        url.replace_extension(".html");
+        nav_pages_.push_back({fm.title, url.string()});
+      }
     }
   }
+
+  navbar_ = "<nav class=\"rattip-nav\">\n";
+  for (auto &item : nav_pages_) {
+    navbar_ += "  <a href=\"" + item.second + "\" class=\"rattip-nav-a\">" +
+               item.first + "</a>\n";
+  }
+  navbar_ += "</nav>";
 }
 
 /* intialize theme struct object */
@@ -79,7 +101,7 @@ void SSGen::generate_html() {
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
 
-  for (const std::string &mf : md_files_) {
+  for (const auto &[mf, content, fm] : files_) {
     std::filesystem::path md_path(mf);
     std::filesystem::path rel = std::filesystem::relative(md_path, main_dir_);
     std::filesystem::path out_path = std::filesystem::path(public_dir_) / rel;
@@ -92,9 +114,7 @@ void SSGen::generate_html() {
       continue;
     }
 
-    std::string content = load_file(mf);
-    FMatter     fm      = parse_front_matter(content, mf);
-    HTMLGen     generator(content, flags);
+    HTMLGen generator(content, flags);
     generator.parse_markdown();
     save_html_file(generator.get_html(), fm, mf);
   }
@@ -127,6 +147,11 @@ void SSGen::save_html_file(const std::string &html_content,
   if ("blog" == front_matter.tmpl) {
     size_t bd = tmpl.find("{blog_date}");
     tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+  }
+  size_t nv = tmpl.find("{navbar}");
+  if (nv != std::string::npos) {
+    tmpl.replace(nv, std::string("{navbar}").size(),
+                 front_matter.nav ? navbar_ : "");
   }
 
   of.write(tmpl.c_str(), tmpl.size());
@@ -163,10 +188,10 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     std::string key = trim(line.substr(0, pos));
     std::string val = trim(line.substr(pos + 1));
 
-    key == "title"      ? fm.title     = val
-    : key == "date"     ? fm.date     = val
-    : key == "template" ? fm.tmpl = val
-                        : "";
+    key == "title" ? fm.title = val : "";
+    key == "date" ? fm.date = val : "";
+    key == "template" ? fm.tmpl = val : "";
+    key == "nav" ? fm.nav = true : fm.nav = false;
   }
   if (fm.tmpl.empty()) {
     throw SSGError("No template field found in front_matter of: " + md_file,

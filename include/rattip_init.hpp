@@ -17,9 +17,12 @@ static const char *PAGE_HTML = R"(
   <link rel="stylesheet" href="/styles/global.css">
 </head>
 
+<body>
+{navbar}
 {md_content}
-
 <footer class="rattip-footer"> made with ❤️ by rattip</footer>
+</body>
+
 </html>
 )";
 
@@ -151,7 +154,6 @@ body {
   font-family: 'Playfair Display', serif;
   font-size: 1.6rem;
   font-weight: 400;
-  font-style: italic;
   color: var(--white);
   margin: 2.5rem 0 0.9rem;
   padding-left: 1rem;
@@ -337,6 +339,40 @@ body {
   color: var(--accent);
 }
 
+.rattip-nav {
+  display: flex;
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.rattip-nav::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 3rem;
+  height: 1px;
+  background: var(--accent);
+}
+
+.rattip-nav-a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: none;
+  transition: color 0.2s;
+}
+
+.rattip-nav-a:hover {
+  color: var(--accent);
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -360,6 +396,7 @@ static const char *SAMPLE_INDEX_MD = R"(
 ---
 title: Home
 template: page
+nav: true
 ---
 
 # Welcome To My Blog
