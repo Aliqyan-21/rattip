@@ -10,6 +10,7 @@ struct Args {
   bool        no_gen{false};
   std::string main_dir{"content"};
   std::string public_dir{"public"};
+  std::string templates_dir{"templates"};
   std::string assets_dir{""};
   std::string theme_dir{"themes"};
   std::string theme_name{"dark"};
@@ -22,9 +23,11 @@ struct Args {
 inline Args parse(int argc, char *argv[]) {
   Args         args;
   argh::parser cmdl;
-  cmdl.add_params({"--main", "-m", "--public", "-p", "--assets", "-a",
-                   "--theme-dir", "--theme", "-t", "--force", "-f", "--serve",
-                   "-s", "--port", "-p", "--verbose", "-v"});
+  cmdl.add_params({"--main",    "-m",       "--public", "-p",
+                   "templates", "--assets", "-a",       "--theme-dir",
+                   "--theme",   "-t",       "--force",  "-f",
+                   "--serve",   "-s",       "--port",   "-p",
+                   "--verbose", "-v",       "--no_gen", "-n"});
   cmdl.parse(argc, argv, argh::parser::SINGLE_DASH_IS_MULTIFLAG);
   if (cmdl[{"--help", "-h"}]) {
     std::cout
@@ -33,6 +36,7 @@ inline Args parse(int argc, char *argv[]) {
          "Options:\n"
          "  -m, --main <dir>       content directory (default: content)\n"
          "  -p, --public <dir>     output directory (default: public)\n"
+         "      --templates <dir>  templates directory (default: templates)\n"
          "  -a, --assets <dir>     assets directory (default: assets)\n"
          "  -t, --theme <name>     theme name (default: dark)\n"
          "      --theme-dir <dir>  themes directory (default: themes)\n"
@@ -49,6 +53,7 @@ inline Args parse(int argc, char *argv[]) {
   /* args */
   cmdl({"--main", "-m"}) >> args.main_dir;
   cmdl({"--public", "-p"}) >> args.public_dir;
+  cmdl({"--templates"}) >> args.templates_dir;
   cmdl({"--assets", "-a"}) >> args.assets_dir;
   cmdl({"--theme-dir"}) >> args.theme_dir;
   cmdl({"--theme", "-t"}) >> args.theme_name;

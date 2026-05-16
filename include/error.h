@@ -25,4 +25,9 @@ public:
   explicit ServerError(const std::string &msg, const std::string &ctx = "");
 };
 
+class SSGError : public RappitError {
+public:
+  explicit SSGError(const std::string &msg, const std::string &ctx = "");
+};
+
 #endif  //! ERROR_H

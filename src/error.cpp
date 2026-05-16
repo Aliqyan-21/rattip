@@ -17,3 +17,6 @@ RuntimeError::RuntimeError(const std::string &msg, const std::string &ctx)
 
 ServerError::ServerError(const std::string &msg, const std::string &ctx)
   : RappitError("[Server Error] " + msg, ctx) {}
+
+SSGError::SSGError(const std::string &msg, const std::string &ctx)
+  : RappitError("[SSG Error] " + msg, ctx) {}

@@ -20,7 +20,7 @@ struct Theme {
 class SSGen {
 public:
   SSGen(const std::string &main_dir_path, const std::string &public_dir_path,
-        const std::string &assets_dir);
+        const std::string template_dir, const std::string &assets_dir);
 
   void generate_site();
   void init_theme(const std::string &name, const std::string &theme_dir);
@@ -32,6 +32,7 @@ public:
 private:
   std::string main_dir_;
   std::string public_dir_; /* final html will be generated to be served */
+  std::string template_dir_;
   std::string assets_dir_;
   std::vector<std::string>                     md_files_;
   Theme                                        theme_;
@@ -40,7 +41,8 @@ private:
 
   bool force_{false};  // force generation of all files
 
-  FMatter parse_front_matter(std::string &content);
+  FMatter parse_front_matter(std::string       &content,
+                             const std::string &md_file /*for error*/);
 
   void content_walker();
   void generate_html();

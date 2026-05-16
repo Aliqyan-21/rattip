@@ -7,9 +7,11 @@
 #include "utils.hpp"
 
 SSGen::SSGen(const std::string &main_dir_path,
-             const std::string &public_dir_path, const std::string &assets_dir)
+             const std::string &public_dir_path, const std::string template_dir,
+             const std::string &assets_dir)
   : main_dir_(main_dir_path),
     public_dir_(public_dir_path),
+    template_dir_(template_dir),
     assets_dir_(assets_dir) {
   std::filesystem::create_directory(public_dir_);
 }
@@ -91,7 +93,7 @@ void SSGen::generate_html() {
     }
 
     std::string content = load_file(mf);
-    FMatter     fm      = parse_front_matter(content);
+    FMatter     fm      = parse_front_matter(content, mf);
     HTMLGen     generator(content, flags);
     generator.parse_markdown();
     save_html_file(generator.get_html(), fm, mf);
@@ -111,10 +113,9 @@ void SSGen::save_html_file(const std::string &html_content,
   if (it != templates_.end()) {
     tmpl = it->second;
   } else {
-    std::cerr << "Could not find the template for: " << front_matter.tmpl
-              << "\n"
-              << "Defaulting to using: " << templates_.begin()->first
-              << std::endl;
+    throw SSGError("Could not find the template for: " + front_matter.tmpl,
+                   "fix front matter if template name is wrong, or add the "
+                   "required template");
     tmpl = templates_[templates_.begin()->first];
   }
   std::ofstream of(out_path);
@@ -139,7 +140,8 @@ date: 1998-01-23
 template: [page/blog/...]
 ---
 */
-FMatter SSGen::parse_front_matter(std::string &content) {
+FMatter SSGen::parse_front_matter(std::string       &content,
+                                  const std::string &md_file) {
   FMatter fm;
 
   std::stringstream ss(content);
@@ -166,7 +168,10 @@ FMatter SSGen::parse_front_matter(std::string &content) {
     : key == "template" ? fm.tmpl = val
                         : "";
   }
-  if (fm.tmpl.empty()) { fm.tmpl = "page"; }
+  if (fm.tmpl.empty()) {
+    throw SSGError("No template field found in front_matter of: " + md_file,
+                   "fix it.");
+  }
   if (!start) { return fm; }
   content = std::string(std::istreambuf_iterator<char>(ss), {});
   V66V("Front Matter parsed successfully!\n");
@@ -174,16 +179,13 @@ FMatter SSGen::parse_front_matter(std::string &content) {
 }
 
 void SSGen::load_templates() {
-  if (!std::filesystem::exists(std::filesystem::path("templates")) ||
-      std::filesystem::is_empty(std::filesystem::path("templates"))) {
-    std::cerr << "templates folder is empty or does not exists, html files "
-                 "formed will be without "
-                 "templates"
-              << std::endl;
-    return;
+  if (!std::filesystem::exists(std::filesystem::path(template_dir_)) ||
+      std::filesystem::is_empty(std::filesystem::path(template_dir_))) {
+    throw SSGError("Templates directory '" + template_dir_ +
+                   "' is empty or does not exists (see -h (--templates))");
   }
   for (auto const &en :
-       std::filesystem::recursive_directory_iterator("templates")) {
+       std::filesystem::recursive_directory_iterator(template_dir_)) {
     std::string fn = en.path().filename().stem();
     templates_[fn] = load_file(en.path());
   }
