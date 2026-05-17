@@ -396,7 +396,7 @@ static const char *SAMPLE_INDEX_MD = R"(
 ---
 title: Home
 template: page
-nav: true
+nav: 1
 ---
 
 # Welcome To My Blog
@@ -420,7 +420,7 @@ template: page
 
 static const char *SAMPLE_BLOG_MD = R"(
 ---
-title: Home
+title: First Blog
 template: blog
 ---
 

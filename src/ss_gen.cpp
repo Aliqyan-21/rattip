@@ -105,15 +105,18 @@ void SSGen::content_walker() {
           std::filesystem::relative(en.path(), main_dir_);
         std::filesystem::path url = std::filesystem::path("/") / rel;
         url.replace_extension(".html");
-        nav_pages_.push_back({fm.title, url.string()});
+        nav_pages_.push_back({fm.title, url.string(), fm.nav_order});
       }
     }
   }
 
+  std::sort(nav_pages_.begin(), nav_pages_.end(),
+            [](const NavL &a, const NavL &b) { return a.order < b.order; });
+
   navbar_ = "<nav class=\"rattip-nav\">\n";
   for (auto &item : nav_pages_) {
-    navbar_ += "  <a href=\"" + item.second + "\" class=\"rattip-nav-a\">" +
-               item.first + "</a>\n";
+    navbar_ += "  <a href=\"" + item.url + "\" class=\"rattip-nav-a\">" +
+               item.title + "</a>\n";
   }
   navbar_ += "</nav>";
 }
@@ -221,7 +224,14 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     key == "title" ? fm.title = val : "";
     key == "date" ? fm.date = val : "";
     key == "template" ? fm.tmpl = val : "";
-    if (key == "nav") { fm.nav = (val == "true"); }
+    if (key == "nav") {
+      fm.nav = true;
+      if (!val.empty()) {
+        try {
+          fm.nav_order = std::stoi(val);
+        } catch (...) { fm.nav_order = 99; }
+      }
+    }
   }
   if (fm.tmpl.empty()) {
     throw SSGError("No template field found in front_matter of: " + md_file,
