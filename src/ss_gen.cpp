@@ -31,30 +31,61 @@ void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
   std::unordered_map<std::string, std::filesystem::file_time_type>
     snaps;  // [name : time last changed]
 
-  for (auto const &en :
-       std::filesystem::recursive_directory_iterator(main_dir_)) {
-    if (en.path().extension() == ".md") {
-      snaps[en.path()] = std::filesystem::last_write_time(en.path());
+  auto snap_dir = [&](const std::string &dir) {
+    if (!std::filesystem::exists(dir)) { return; }
+    for (const auto &en : std::filesystem::recursive_directory_iterator(dir)) {
+      if (en.is_regular_file()) {
+        snaps[en.path()] = std::filesystem::last_write_time(en.path());
+      }
     }
-  }
+  };
+
+  snap_dir(main_dir_);
+  snap_dir(template_dir_);
+  snap_dir(theme_.theme_dir + "/" + theme_.name);
+  snap_dir(assets_dir_);
 
   while (true) {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-    for (auto const &en :
-         std::filesystem::recursive_directory_iterator(main_dir_)) {
-      if (en.path().extension() != ".md") { continue; }
-      auto ct = std::filesystem::last_write_time(en.path());
-      if (ct != snaps[en.path()]) {
-        snaps[en.path()] = ct;
-        V66V("Change detected: ", en.path().string());
+    bool changed{false};
+    bool needs_content_reload{false};
+    bool needs_template_reload{false};
+    bool needs_theme_reload{false};
+    bool needs_assets_reload{false};
+
+    auto check_dir = [&](const std::string &dir, bool &needs_reload) {
+      if (!std::filesystem::exists(dir)) { return; }
+      for (const auto &en :
+           std::filesystem::recursive_directory_iterator(dir)) {
+        if (!en.is_regular_file()) { continue; }
+        auto ct = std::filesystem::last_write_time(en.path());
+        if (ct != snaps[en.path()]) {
+          snaps[en.path()] = ct;
+          changed          = true;
+          V66V("change detected: ", en.path().string());
+          needs_reload = true;
+        }
+      }
+    };
+
+    check_dir(main_dir_, needs_content_reload);
+    check_dir(template_dir_, needs_template_reload);
+    check_dir(theme_.theme_dir + "/" + theme_.name, needs_theme_reload);
+    check_dir(assets_dir_, needs_assets_reload);
+
+    if (changed) {
+      if (needs_template_reload) { load_templates(); }
+      if (needs_theme_reload) { init_theme(theme_.name, theme_.theme_dir); }
+      if (needs_assets_reload) { load_assets(); }
+      if (needs_template_reload || needs_theme_reload || needs_content_reload) {
         files_.clear();
         nav_pages_.clear();
         navbar_.clear();
         content_walker();
         generate_html();
-        reload_flag = true;
       }
+      reload_flag = true;
     }
   }
 }
@@ -136,7 +167,6 @@ void SSGen::save_html_file(const std::string &html_content,
     throw SSGError("Could not find the template for: " + front_matter.tmpl,
                    "fix front matter if template name is wrong, or add the "
                    "required template");
-    tmpl = templates_[templates_.begin()->first];
   }
   std::ofstream of(out_path);
 

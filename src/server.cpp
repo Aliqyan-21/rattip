@@ -127,7 +127,7 @@ void serve(const std::string public_dir, int port,
         content;
       size_t sent = 0;
       while (sent < response.size()) {
-        int n = send(cfd, response.c_str() + sent, response.size(), 0);
+        int n = send(cfd, response.c_str() + sent, response.size() - sent, 0);
         if (n <= 0) { break; }
         sent += n;
       }
