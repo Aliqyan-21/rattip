@@ -1,9 +1,9 @@
 #ifndef RATTIP_INIT_HPP
 #define RATTIP_INIT_HPP
 
-#include <error.h>
 #include <filesystem>
 #include <fstream>
+#include "error.h"
 
 static const char *PAGE_HTML = R"(
 <!DOCTYPE html>
