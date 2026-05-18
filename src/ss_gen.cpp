@@ -161,7 +161,11 @@ void SSGen::generate_html() {
     }
 
     HTMLGen generator(content, flags);
-    generator.parse_markdown();
+    int     res = generator.parse_markdown();
+    if (res != 0) {
+      /* md4c is quiet lenient so..., we'll see */
+      V66V("An error occured while parsing markdown file: ", md_path);
+    }
     save_html_file(generator.get_html(), fm, mf);
   }
   V66V("HTML generation complete");
