@@ -11,11 +11,18 @@ struct FMatter {
   std::string date;
   std::string tmpl;
   bool        nav{false};
+  int         nav_order{99};
 };
 
 struct Theme {
   std::string name;
   std::string theme_dir;
+};
+
+struct NavL {
+  std::string title;
+  std::string url;
+  int         order;
 };
 
 class SSGen {
@@ -42,9 +49,8 @@ private:
   /* templates */
   std::unordered_map<std::string, std::string> templates_;
 
-  std::vector<std::pair<std::string, std::string>>
-              nav_pages_; /* [title, url] */
-  std::string navbar_;
+  std::vector<NavL> nav_pages_;
+  std::string       navbar_;
 
   bool force_{false};  // force generation of all files
 
