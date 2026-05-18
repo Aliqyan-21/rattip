@@ -90,7 +90,7 @@ inline std::string load_file(const std::string &filepath) {
   std::string content((std::istreambuf_iterator<char>(inf)),
                       std::istreambuf_iterator<char>());
   inf.close();
-  V66V("File '", filepath, "' loaded successfully.");
+  // V66V("File '", filepath, "' loaded successfully.");
   return content;
 }
 

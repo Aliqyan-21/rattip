@@ -75,10 +75,20 @@ void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
     check_dir(assets_dir_, needs_assets_reload);
 
     if (changed) {
-      if (needs_template_reload) { load_templates(); }
-      if (needs_theme_reload) { init_theme(theme_.name, theme_.theme_dir); }
-      if (needs_assets_reload) { load_assets(); }
+      if (needs_template_reload) {
+        V66V("Templates changed, reloading...");
+        load_templates();
+      }
+      if (needs_theme_reload) {
+        V66V("Themes changed, reloading...");
+        init_theme(theme_.name, theme_.theme_dir);
+      }
+      if (needs_assets_reload) {
+        V66V("Assets changed, reloading...");
+        load_assets();
+      }
       if (needs_template_reload || needs_theme_reload || needs_content_reload) {
+        V66V("Content changed, reloading...");
         files_.clear();
         nav_pages_.clear();
         navbar_.clear();
@@ -109,6 +119,8 @@ void SSGen::content_walker() {
       }
     }
   }
+  V66V("Found ", files_.size(), " markdown files");
+  V66V("Found ", nav_pages_.size(), " nav items");
 
   std::sort(nav_pages_.begin(), nav_pages_.end(),
             [](const NavL &a, const NavL &b) { return a.order < b.order; });
@@ -152,6 +164,7 @@ void SSGen::generate_html() {
     generator.parse_markdown();
     save_html_file(generator.get_html(), fm, mf);
   }
+  V66V("HTML generation complete");
 }
 
 void SSGen::save_html_file(const std::string &html_content,
@@ -187,6 +200,7 @@ void SSGen::save_html_file(const std::string &html_content,
                  front_matter.nav ? navbar_ : "");
   }
 
+  V66V("Writing: ", out_path.string());
   of.write(tmpl.c_str(), tmpl.size());
   of.close();
 }
@@ -254,6 +268,7 @@ void SSGen::load_templates() {
        std::filesystem::recursive_directory_iterator(template_dir_)) {
     std::string fn = en.path().filename().stem();
     templates_[fn] = load_file(en.path());
+    V66V("Template loaded: ", fn);
   }
 }
 
