@@ -127,6 +127,7 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_U: handle_u_enter(); break;
     case MD_SPAN_SUPERSCRIPT: handle_superscript_enter(); break;
     case MD_SPAN_SUBSCRIPT: handle_subscript_enter(); break;
+    case MD_SPAN_SPOILER: handle_spoiler_enter(); break;
     default: break;
   }
   return 0;
@@ -142,6 +143,7 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_U: handle_u_leave(); break;
     case MD_SPAN_SUPERSCRIPT: handle_superscript_leave(); break;
     case MD_SPAN_SUBSCRIPT: handle_subscript_leave(); break;
+    case MD_SPAN_SPOILER: handle_spoiler_leave(); break;
     default: break;
   }
   return 0;
@@ -265,6 +267,13 @@ void HTMLGen::handle_superscript_enter() {
 void HTMLGen::handle_subscript_enter() {
   html_buf_ += "<sub class=\"rattip-sub\">";
 }
+void HTMLGen::handle_spoiler_enter() {
+  html_buf_ +=
+    "<span class=\"rattip-spoiler\" "
+    "style=\"filter:blur(4px);cursor:pointer;"
+    "transition:filter 0.3s ease;user-select:none;\" "
+    "onclick=\"this.style.filter=this.style.filter===''?'blur(4px)':''\">";
+}
 
 /* ----------------------- */
 /* handlers for leave_span */
@@ -278,6 +287,7 @@ void HTMLGen::handle_del_leave() { html_buf_ += " </del>"; }
 void HTMLGen::handle_u_leave() { html_buf_ += " </u> "; }
 void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
 void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }
+void HTMLGen::handle_spoiler_leave() { html_buf_ += "</span> "; }
 
 /* ----------------- */
 /* handlers for text */

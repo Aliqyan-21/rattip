@@ -379,6 +379,13 @@ body {
   color: var(--accent);
 }
 
+.rattip-spoiler {
+  background-color: var(--bg);
+  border-radius: 3px;
+  padding: 0 0.3rem;
+  font-style: italic;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
