@@ -145,7 +145,7 @@ void SSGen::init_theme(const std::string &name, const std::string &theme_dir) {
 
 void SSGen::generate_html() {
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
-              MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES;
+              MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES | MD_FLAG_TASKLISTS;
 
   for (const auto &[mf, content, fm] : files_) {
     std::filesystem::path md_path(mf);

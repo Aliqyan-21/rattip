@@ -178,6 +178,14 @@ void HTMLGen::handle_ol_enter(MD_BLOCK_OL_DETAIL *d) {
 }
 void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) {
   html_buf_ += "<li class=\"rattip-li\"> ";
+  if (d->is_task) {
+    html_buf_ += "<input type=\"checkbox\" disabled";
+    if (d->task_mark != ' ') {
+      html_buf_ += " checked> ";
+    } else {
+      html_buf_ += "> ";
+    }
+  }
 }
 void HTMLGen::handle_hr_enter() { html_buf_ += "<hr class=\"rattip-hr\">"; }
 void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
