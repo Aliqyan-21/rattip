@@ -227,6 +227,12 @@ body {
   margin: 0.4rem 0;
 }
 
+.rattip-li input[type="checkbox"] {
+  margin-right: 0.5rem;
+  accent-color: var(--accent);
+  cursor: default;
+}
+
 .rattip-code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.62em;
@@ -371,6 +377,13 @@ body {
 
 .rattip-nav-a:hover {
   color: var(--accent);
+}
+
+.rattip-spoiler {
+  background-color: var(--bg);
+  border-radius: 3px;
+  padding: 0 0.3rem;
+  font-style: italic;
 }
 
 ::-webkit-scrollbar {
