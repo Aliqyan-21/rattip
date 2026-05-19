@@ -84,7 +84,7 @@ private:
   void handle_u_enter();
   void handle_superscript_enter();
   void handle_subscript_enter();
-  void handle_spoiler_enter();
+  void handle_spoiler_enter(); // syntax: ||hidden text||
 
   /* handlers for leave_span */
   void handle_em_leave();
