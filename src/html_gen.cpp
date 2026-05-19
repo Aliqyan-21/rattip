@@ -192,7 +192,7 @@ void HTMLGen::handle_li_enter(MD_BLOCK_LI_DETAIL *d) {
 void HTMLGen::handle_hr_enter() { html_buf_ += "<hr class=\"rattip-hr\">"; }
 void HTMLGen::handle_code_enter(MD_BLOCK_CODE_DETAIL *d) {
   html_buf_ += "<pre class=\"rattip-pre\"><code class=\"rattip-code lang-" +
-               std::string(d->lang.text, d->lang.size) + "\">\n";
+               std::string(d->lang.text, d->lang.size) + "\">";
 }
 void HTMLGen::handle_quote_enter() {
   html_buf_ += "<blockquote class=\"rattip-blockquote\"> ";
