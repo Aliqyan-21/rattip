@@ -84,7 +84,7 @@ private:
   void handle_u_enter();
   void handle_superscript_enter();
   void handle_subscript_enter();
-  void handle_spoiler_enter(); // syntax: ||hidden text||
+  void handle_spoiler_enter();  // syntax: ||hidden text||
 
   /* handlers for leave_span */
   void handle_em_leave();
@@ -103,6 +103,7 @@ private:
   void handle_br_text();
   void handle_html_text(const MD_CHAR *text, MD_SIZE size);
   void handle_code_text(const MD_CHAR *text, MD_SIZE size);
+  void handle_softbr_text();
 };
 
 #endif  //! HTML_GEN_H

@@ -155,6 +155,7 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
     case MD_TEXT_BR: handle_br_text(); break;
     case MD_TEXT_HTML: handle_html_text(text, size); break;
     case MD_TEXT_CODE: handle_code_text(text, size); break;
+    case MD_TEXT_SOFTBR: handle_softbr_text(); break;
     default: break;
   }
   return 0;
@@ -302,3 +303,4 @@ void HTMLGen::handle_html_text(const MD_CHAR *text, MD_SIZE size) {
 void HTMLGen::handle_code_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
+void HTMLGen::handle_softbr_text() { html_buf_ += " "; }
