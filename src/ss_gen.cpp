@@ -182,29 +182,35 @@ void SSGen::save_html_file(const std::string &html_content,
   std::filesystem::create_directories(out_path.parent_path());
   auto        it = templates_.find(front_matter.tmpl);
   std::string tmpl;
+  bool        no_tmpl{false};
   if (it != templates_.end()) {
     tmpl = it->second;
   } else {
-    throw SSGError("Could not find the template for: " + front_matter.tmpl,
-                   "fix front matter if template name is wrong, or add the "
-                   "required template");
+    no_tmpl = true;
+    front_matter.tmpl.empty()
+      ? V66V("Template value empty in front matter, fix it.")
+      : V66V("Template '", front_matter.tmpl, "' not found for: ", md_file);
+    V66V("HTML will be generated without template");
   }
   std::ofstream of(out_path);
 
-  size_t tt = tmpl.find("{title}");
-  tmpl.replace(tt, std::string("{title}").size(), front_matter.title);
-  size_t bc = tmpl.find("{md_content}");
-  tmpl.replace(bc, std::string("{md_content}").size(), html_content);
-  if ("blog" == front_matter.tmpl) {
-    size_t bd = tmpl.find("{blog_date}");
-    tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+  if (!no_tmpl) {
+    size_t tt = tmpl.find("{title}");
+    tmpl.replace(tt, std::string("{title}").size(), front_matter.title);
+    size_t bc = tmpl.find("{md_content}");
+    tmpl.replace(bc, std::string("{md_content}").size(), html_content);
+    if ("blog" == front_matter.tmpl) {
+      size_t bd = tmpl.find("{blog_date}");
+      tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+    }
+    size_t nv = tmpl.find("{navbar}");
+    if (nv != std::string::npos) {
+      tmpl.replace(nv, std::string("{navbar}").size(),
+                   front_matter.nav ? navbar_ : "");
+    }
+  } else {
+    tmpl = html_content;
   }
-  size_t nv = tmpl.find("{navbar}");
-  if (nv != std::string::npos) {
-    tmpl.replace(nv, std::string("{navbar}").size(),
-                 front_matter.nav ? navbar_ : "");
-  }
-
   V66V("Writing: ", out_path.string());
   of.write(tmpl.c_str(), tmpl.size());
   of.close();
@@ -253,8 +259,11 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     }
   }
   if (fm.tmpl.empty()) {
-    throw SSGError("No template field found in front_matter of: " + md_file,
-                   "fix it.");
+    V66V("No template field found in front_matter of: ", md_file);
+    V66V(
+      "The html formed will be without any template, fix it by putting "
+      "template field");
+    fm.tmpl = "";
   }
   if (!start) { return fm; }
   content = std::string(std::istreambuf_iterator<char>(ss), {});
