@@ -82,6 +82,11 @@ static inline void V66V(Args &&...args) {
     (std::clog << ... << args) << std::endl;
   }
 }
+template <typename... Args>
+static inline void W66W(Args &&...args) {
+  std::cerr << "\x1b[38;5;220m[WARN] ";
+  (std::cerr << ... << args) << "\033[0m" << std::endl;
+}
 
 /* load file and return its contents as std::string */
 inline std::string load_file(const std::string &filepath) {

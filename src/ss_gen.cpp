@@ -165,7 +165,7 @@ void SSGen::generate_html() {
     int     res = generator.parse_markdown();
     if (res != 0) {
       /* md4c is quiet lenient so..., we'll see */
-      V66V("An error occured while parsing markdown file: ", md_path);
+      W66W("An error occured while parsing markdown file: ", md_path);
     }
     save_html_file(generator.get_html(), fm, mf);
   }
@@ -188,9 +188,9 @@ void SSGen::save_html_file(const std::string &html_content,
   } else {
     no_tmpl = true;
     front_matter.tmpl.empty()
-      ? V66V("Template value empty in front matter, fix it.")
-      : V66V("Template '", front_matter.tmpl, "' not found for: ", md_file);
-    V66V("HTML will be generated without template");
+      ? W66W("Template value empty in front matter, fix it.")
+      : W66W("Template '", front_matter.tmpl, "' not found for: ", md_file);
+    W66W("HTML will be generated without template");
   }
   std::ofstream of(out_path);
 
@@ -259,8 +259,8 @@ FMatter SSGen::parse_front_matter(std::string       &content,
     }
   }
   if (fm.tmpl.empty()) {
-    V66V("No template field found in front_matter of: ", md_file);
-    V66V(
+    W66W("No template field found in front_matter of: ", md_file);
+    W66W(
       "The html formed will be without any template, fix it by putting "
       "template field");
     fm.tmpl = "";
@@ -293,7 +293,7 @@ void SSGen::load_assets() {
                             std::filesystem::copy_options::overwrite_existing);
     V66V("Assets loaded successfully from '", assets_dir_, "'");
   } else {
-    V66V("Skipping loading assets '", assets_dir_,
+    W66W("Skipping loading assets '", assets_dir_,
          "' - Does not exists.(see -h (--assets))");
   }
 }
