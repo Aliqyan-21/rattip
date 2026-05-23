@@ -195,19 +195,21 @@ void SSGen::save_html_file(const std::string &html_content,
   std::ofstream of(out_path);
 
   if (!no_tmpl) {
-    size_t tt = tmpl.find("{title}");
-    tmpl.replace(tt, std::string("{title}").size(), front_matter.title);
-    size_t bc = tmpl.find("{md_content}");
-    tmpl.replace(bc, std::string("{md_content}").size(), html_content);
+    size_t fr = tmpl.find("{title}");
+    tmpl.replace(fr, std::string("{title}").size(), front_matter.title);
+    fr = tmpl.find("{md_content}");
+    tmpl.replace(fr, std::string("{md_content}").size(), html_content);
     if ("blog" == front_matter.tmpl) {
-      size_t bd = tmpl.find("{blog_date}");
-      tmpl.replace(bd, std::string("{blog_date}").size(), front_matter.date);
+      fr = tmpl.find("{blog_date}");
+      tmpl.replace(fr, std::string("{blog_date}").size(), front_matter.date);
     }
-    size_t nv = tmpl.find("{navbar}");
-    if (nv != std::string::npos) {
-      tmpl.replace(nv, std::string("{navbar}").size(),
+    fr = tmpl.find("{navbar}");
+    if (fr != std::string::npos) {
+      tmpl.replace(fr, std::string("{navbar}").size(),
                    front_matter.nav ? navbar_ : "");
     }
+    fr = tmpl.find("{css}");
+    tmpl.replace(fr, std::string("{css}").size(), front_matter.css + ".css");
   } else {
     tmpl = html_content;
   }
@@ -257,6 +259,7 @@ FMatter SSGen::parse_front_matter(std::string       &content,
         } catch (...) { fm.nav_order = 99; }
       }
     }
+    key == "css" ? fm.css = val : "";
   }
   if (fm.tmpl.empty()) {
     W66W("No template field found in front_matter of: ", md_file);
@@ -264,6 +267,11 @@ FMatter SSGen::parse_front_matter(std::string       &content,
       "The html formed will be without any template, fix it by putting "
       "template field");
     fm.tmpl = "";
+  }
+  if (fm.css.empty()) {
+    W66W(
+      "the css field in front matter is there but empty, so default css will "
+      "be used: 'global.css'");
   }
   if (!start) { return fm; }
   content = std::string(std::istreambuf_iterator<char>(ss), {});

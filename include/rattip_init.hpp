@@ -14,7 +14,7 @@ static const char *PAGE_HTML = R"(
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{title}</title>
-  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/{css}">
 </head>
 
 <body>
@@ -36,7 +36,7 @@ static const char *BLOG_HTML = R"(
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{title}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/sunburst.min.css">
-  <link rel="stylesheet" href="/styles/global.css">
+  <link rel="stylesheet" href="/styles/{css}">
 </head>
 
 <body>
