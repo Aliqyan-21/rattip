@@ -246,14 +246,14 @@ void HTMLGen::handle_td_leave() { html_buf_ += "</td>\n"; }
 /* ----------------------- */
 /* handlers for enter_span */
 /* ----------------------- */
-void HTMLGen::handle_em_enter() { html_buf_ += " <i class=\"rattip-i\"> "; }
-void HTMLGen::handle_strong_enter() { html_buf_ += " <b class=\"rattip-b\"> "; }
+void HTMLGen::handle_em_enter() { html_buf_ += " <i class=\"rattip-i\">"; }
+void HTMLGen::handle_strong_enter() { html_buf_ += " <b class=\"rattip-b\">"; }
 void HTMLGen::handle_backtick_enter() {
-  html_buf_ += " <code class=\"rattip-code\"> ";
+  html_buf_ += " <code class=\"rattip-code\">";
 }
 void HTMLGen::handle_link_enter(MD_SPAN_A_DETAIL *d) {
   html_buf_ += "<a href=\"" + std::string(d->href.text, d->href.size) +
-               "\" class=\"rattip-a\"> " +
+               "\" class=\"rattip-a\">" +
                std::string(d->title.text, d->title.size);
 }
 void HTMLGen::handle_img_enter(MD_SPAN_IMG_DETAIL *d) {
@@ -282,9 +282,9 @@ void HTMLGen::handle_spoiler_enter() {
 void HTMLGen::handle_em_leave() { html_buf_ += "</i> "; }
 void HTMLGen::handle_strong_leave() { html_buf_ += "</b> "; }
 void HTMLGen::handle_backtick_leave() { html_buf_ += "</code> "; }
-void HTMLGen::handle_link_leave() { html_buf_ += " </a>"; }
-void HTMLGen::handle_img_leave() { html_buf_ += "\" />"; }
-void HTMLGen::handle_del_leave() { html_buf_ += "</del>"; }
+void HTMLGen::handle_link_leave() { html_buf_ += "</a> "; }
+void HTMLGen::handle_img_leave() { html_buf_ += "\" /> "; }
+void HTMLGen::handle_del_leave() { html_buf_ += "</del> "; }
 void HTMLGen::handle_u_leave() { html_buf_ += "</u> "; }
 void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
 void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }
