@@ -34,6 +34,10 @@ set(EXTERNALS
   external/md4c.h
   external/md4c.c
   external/argh.h
+  external/lx4c.h
+  external/lx4c.c
+  external/lx_to_mathml.h
+  external/lx_to_mathml.c
 )
 
 set(COMPILE_FLAGS_DEBUG -Wall -ggdb3 -O0)

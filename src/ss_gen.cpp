@@ -146,7 +146,7 @@ void SSGen::init_theme(const std::string &name, const std::string &theme_dir) {
 void SSGen::generate_html() {
   int flags = MD_FLAG_STRIKETHROUGH | MD_FLAG_UNDERLINE | MD_FLAG_SUPERSCRIPTS |
               MD_FLAG_SUBSCRIPTS | MD_FLAG_TABLES | MD_FLAG_TASKLISTS |
-              MD_FLAG_SPOILERS;
+              MD_FLAG_SPOILERS | MD_FLAG_LATEXMATHSPANS;
 
   for (const auto &[mf, content, fm] : files_) {
     std::filesystem::path md_path(mf);
@@ -209,7 +209,9 @@ void SSGen::save_html_file(const std::string &html_content,
                    front_matter.nav ? navbar_ : "");
     }
     fr = tmpl.find("{css}");
-    tmpl.replace(fr, std::string("{css}").size(), front_matter.css + ".css");
+    if (fr != std::string::npos) {
+      tmpl.replace(fr, std::string("{css}").size(), front_matter.css + ".css");
+    }
   } else {
     tmpl = html_content;
   }

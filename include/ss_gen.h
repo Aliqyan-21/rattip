@@ -11,7 +11,7 @@ struct FMatter {
   std::string date;  /* date: 2-2-2022 */
   std::string tmpl;  /* tmpl: page */
   bool        nav{false};
-  int         nav_order{99};     /* nav: 0 */
+  int         nav_order{99}; /* nav: 0 */
   std::string css{"global"}; /* css: contact - css file: contact.css */
 };
 

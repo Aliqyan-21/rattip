@@ -85,6 +85,8 @@ private:
   void handle_superscript_enter();
   void handle_subscript_enter();
   void handle_spoiler_enter();  // syntax: ||hidden text||
+  void handle_latex_enter();
+  void handle_latex_display_enter();
 
   /* handlers for leave_span */
   void handle_em_leave();
@@ -97,6 +99,8 @@ private:
   void handle_superscript_leave();
   void handle_subscript_leave();
   void handle_spoiler_leave();
+  void handle_latex_leave();
+  void handle_latex_display_leave();
 
   /* handlers for text */
   void handle_normal_text(const MD_CHAR *text, MD_SIZE size);
@@ -104,6 +108,7 @@ private:
   void handle_html_text(const MD_CHAR *text, MD_SIZE size);
   void handle_code_text(const MD_CHAR *text, MD_SIZE size);
   void handle_softbr_text();
+  void handle_latex_text(const MD_CHAR *text, MD_SIZE size);
 };
 
 #endif  //! HTML_GEN_H

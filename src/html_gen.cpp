@@ -1,4 +1,6 @@
 #include "html_gen.h"
+#include "lx4c.h"
+#include "lx_to_mathml.h"
 
 /* ----------- */
 /* CONSTRUCTOR */
@@ -128,6 +130,8 @@ int HTMLGen::dispatch_enter_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_SUPERSCRIPT: handle_superscript_enter(); break;
     case MD_SPAN_SUBSCRIPT: handle_subscript_enter(); break;
     case MD_SPAN_SPOILER: handle_spoiler_enter(); break;
+    case MD_SPAN_LATEXMATH: handle_latex_enter(); break;
+    case MD_SPAN_LATEXMATH_DISPLAY: handle_latex_display_enter(); break;
     default: break;
   }
   return 0;
@@ -144,6 +148,8 @@ int HTMLGen::dispatch_leave_span(MD_SPANTYPE type, void *detail_ptr) {
     case MD_SPAN_SUPERSCRIPT: handle_superscript_leave(); break;
     case MD_SPAN_SUBSCRIPT: handle_subscript_leave(); break;
     case MD_SPAN_SPOILER: handle_spoiler_leave(); break;
+    case MD_SPAN_LATEXMATH: handle_latex_leave(); break;
+    case MD_SPAN_LATEXMATH_DISPLAY: handle_latex_display_leave(); break;
     default: break;
   }
   return 0;
@@ -156,6 +162,7 @@ int HTMLGen::dispatch_text(MD_TEXTTYPE type, const MD_CHAR *text,
     case MD_TEXT_HTML: handle_html_text(text, size); break;
     case MD_TEXT_CODE: handle_code_text(text, size); break;
     case MD_TEXT_SOFTBR: handle_softbr_text(); break;
+    case MD_TEXT_LATEXMATH: handle_latex_text(text, size); break;
     default: break;
   }
   return 0;
@@ -275,6 +282,12 @@ void HTMLGen::handle_spoiler_enter() {
     "transition:filter 0.3s ease;user-select:none;\" "
     "onclick=\"this.style.filter=this.style.filter===''?'blur(4px)':''\">";
 }
+void HTMLGen::handle_latex_enter() {
+  html_buf_ += "<math class=\"rattip-lx\">";
+}
+void HTMLGen::handle_latex_display_enter() {
+  html_buf_ += "<math display=\"block\" class=\"rattip-lx-display\">";
+}
 
 /* ----------------------- */
 /* handlers for leave_span */
@@ -289,6 +302,8 @@ void HTMLGen::handle_u_leave() { html_buf_ += "</u> "; }
 void HTMLGen::handle_superscript_leave() { html_buf_ += "</sup> "; }
 void HTMLGen::handle_subscript_leave() { html_buf_ += "</sub> "; }
 void HTMLGen::handle_spoiler_leave() { html_buf_ += "</span> "; }
+void HTMLGen::handle_latex_leave() { html_buf_ += "</math>"; }
+void HTMLGen::handle_latex_display_leave() { html_buf_ += "</math>"; }
 
 /* ----------------- */
 /* handlers for text */
@@ -304,3 +319,8 @@ void HTMLGen::handle_code_text(const MD_CHAR *text, MD_SIZE size) {
   html_buf_ += std::string(text, size);
 }
 void HTMLGen::handle_softbr_text() { html_buf_ += " "; }
+void HTMLGen::handle_latex_text(const MD_CHAR *text, MD_SIZE size) {
+  lx4c_node *root = lx4c_parse(text, size);
+  html_buf_ += lx4c_to_mathml(root, 0);
+  lx4c_free(root);
+}
