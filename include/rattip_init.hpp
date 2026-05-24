@@ -386,6 +386,20 @@ body {
   font-style: italic;
 }
 
+.rattip-lx {
+  color: var(--white);
+  font-size: 1.05em;
+}
+
+.rattip-lx-display {
+  display: block;
+  color: var(--white);
+  text-align: center;
+  margin: 2rem auto;
+  font-size: 1.15em;
+  overflow-x: auto;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
