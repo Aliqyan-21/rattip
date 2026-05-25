@@ -5,6 +5,6 @@
 #include <string>
 
 void serve(const std::string public_dir, int port,
-           std::atomic<bool> *reload_flag = nullptr);
+           std::atomic<int> *reload_gen = nullptr);
 
 #endif  //! SERVER_H

@@ -27,7 +27,7 @@ void SSGen::generate_site() {
 }
 
 /* watch for any change (file saved) in main_dir_ */
-void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
+void SSGen::watch_and_regen(std::atomic<int> &reload_gen) {
   std::unordered_map<std::string, std::filesystem::file_time_type>
     snaps;  // [name : time last changed]
 
@@ -95,7 +95,7 @@ void SSGen::watch_and_regen(std::atomic<bool> &reload_flag) {
         content_walker();
         generate_html();
       }
-      reload_flag = true;
+      reload_gen++;
     }
   }
 }

@@ -26,7 +26,7 @@ std::string get_mime_type(const std::string &path) {
 }
 
 void serve(const std::string public_dir, int port,
-           std::atomic<bool> *reload_flag) {
+           std::atomic<int> *reload_gen) {
   if (!std::filesystem::exists(std::filesystem::path(public_dir))) {
     throw ServerError(
       "Dir '" + public_dir + "' does not exist to serve",
@@ -67,20 +67,26 @@ void serve(const std::string public_dir, int port,
     std::string       method, path;
     req >> method >> path;
 
-    if (path == "/livereload" && reload_flag) {
-      std::thread([cfd, reload_flag]() {
+    if (path == "/livereload" && reload_gen) {
+      std::thread([cfd, reload_gen]() {
         std::string headers =
           "HTTP/1.1 200 OK\r\n"
           "Content-Type: text/event-stream\r\n"
           "Cache-Control: no-cache\r\n"
           "\r\n";
         send(cfd, headers.c_str(), headers.size(), 0);
+        int seen_gen = reload_gen->load();
+        int tick{0};
         while (true) {
-          if (reload_flag->load()) {
+          if (reload_gen->load() != seen_gen) {
             std::string msg = "data: reload\n\n";
-            send(cfd, msg.c_str(), msg.size(), 0);
-            reload_flag->store(false);
+            if (send(cfd, msg.c_str(), msg.size(), 0) <= 0) { break; }
             break;
+          }
+          if (++tick >= 100) {
+            tick             = 0;
+            std::string ping = ": ping\n\n";
+            if (send(cfd, ping.c_str(), ping.size(), 0) <= 0) { break; }
           }
           std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
@@ -108,7 +114,7 @@ void serve(const std::string public_dir, int port,
       std::string content((std::istreambuf_iterator<char>(inf)),
                           std::istreambuf_iterator<char>());
       std::string mime = get_mime_type(fpath);
-      if (mime == "text/html" && reload_flag) {
+      if (mime == "text/html" && reload_gen) {
         std::string snippet =
           "<script>new EventSource('/livereload')"
           ".onmessage=()=>location.reload()</script>";

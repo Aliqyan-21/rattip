@@ -33,7 +33,7 @@ public:
 
   void generate_site();
   void init_theme(const std::string &name, const std::string &theme_dir);
-  void watch_and_regen(std::atomic<bool> &reload_flag);
+  void watch_and_regen(std::atomic<int> &reload_gen);
   void set_force();
   void load_templates();
   void load_assets();

@@ -25,13 +25,10 @@ int main(int argc, char *argv[]) {
     }
 
     if (args.serve) {
-      std::atomic<bool> reload_flag{false};
-      std::thread       watcher([&]() {
-        ssg.watch_and_regen(reload_flag);
-        reload_flag = true;
-      });
+      std::atomic<int> reload_gen{0};
+      std::thread      watcher([&]() { ssg.watch_and_regen(reload_gen); });
       watcher.detach();
-      serve(args.public_dir, args.port, &reload_flag);
+      serve(args.public_dir, args.port, &reload_gen);
     }
   } catch (const RappitError &e) { std::cerr << e.format() << std::endl; }
 
