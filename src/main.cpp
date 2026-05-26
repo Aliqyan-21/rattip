@@ -1,8 +1,9 @@
 #include <thread>
 #include "rattip_init.hpp"
-#include "server.h"
 #include "ss_gen.h"
 #include "utils.hpp"
+
+extern "C" void serve(const char *public_dir, int port, int *reload_gen);
 
 int main(int argc, char *argv[]) {
   Args args = parse(argc, argv);
@@ -28,7 +29,8 @@ int main(int argc, char *argv[]) {
       std::atomic<int> reload_gen{0};
       std::thread      watcher([&]() { ssg.watch_and_regen(reload_gen); });
       watcher.detach();
-      serve(args.public_dir, args.port, &reload_gen);
+      serve(args.public_dir.c_str(), args.port,
+            reinterpret_cast<int *>(&reload_gen));
     }
   } catch (const RappitError &e) { std::cerr << e.format() << std::endl; }
 

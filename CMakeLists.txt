@@ -8,6 +8,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+find_program(FASM fasm REQUIRED)
+set(ASM_OBJ ${CMAKE_CURRENT_BINARY_DIR}/server.o)
+add_custom_command(
+  OUTPUT ${ASM_OBJ}
+  COMMAND ${FASM}
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/server.asm
+  ${ASM_OBJ}
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/server.asm
+)
+
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type (Debug or Release)" FORCE)
   message(STATUS "Build type not specified, defaulting to Release")
@@ -19,14 +29,13 @@ set(SOURCES
   src/main.cpp
   src/html_gen.cpp
   src/ss_gen.cpp
-  src/server.cpp
   src/error.cpp
+  ${ASM_OBJ}
 )
 
 set(HEADERS
   include/html_gen.h
   include/ss_gen.h
-  include/server.h
   include/error.h
 )
 
