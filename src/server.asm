@@ -22,7 +22,7 @@ serve:
 
   mov [sockfd], rax
 
-  mov rax, 54 ; ignoring the return for now, we will use it when we implement error handling later
+  mov rax, 54 ; setsockopt() -- ignoring the return for now, we will use it when we implement error handling later
   mov rdi, [sockfd]
   mov rsi, 1
   mov rdx, 2
@@ -30,10 +30,19 @@ serve:
   mov r8, 4
   syscall
 
-  mov rax, 49
+  mov rax, 49 ; bind()
   mov rdi, [sockfd]
   mov rsi, sockaddr_in
   mov rdx, 16
+  syscall
+
+  mov rax, 50 ; listen()
+  mov rdi, [sockfd]
+  mov rsi, 10
+  syscall
+
+  mov rax, 34
+  syscall
 
   pop rbp
   ret
