@@ -42,8 +42,17 @@ serve:
   mov rsi, 10
   syscall
 
-  mov rax, 34
+.accept_loop:
+  mov rax, 43 ; accept
+  mov rdi, [sockfd]
+  mov rsi, 0
+  mov rdx, 0
   syscall
+
+  cmp rax, 0 ; -ve -> skipping
+  jl .accept_loop
+
+  mov [clientfd], rax;
 
   pop rbp
   ret
@@ -59,3 +68,4 @@ sin_family dw 2         ; AF_INET 2 bytesr
 sin_port   dw 0         ; filled in runtime, after port arg
 sin_addr   dd 0         ; INADDR_ANY
 sin_zero   dq 0         ; padding
+clientfd   dq 0
