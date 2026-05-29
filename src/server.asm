@@ -59,6 +59,8 @@ serve:
   mov rsi, buffer
   mov rdx, 4096
   mov r10, 0
+  xor r8, r8
+  xor r9, r9
   syscall
 
   cmp rax, 0
