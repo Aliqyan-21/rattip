@@ -73,8 +73,14 @@ serve:
   syscall
   jmp .accept_loop
 
-  .handle_request:
-  ; TODO: implement
+.handle_request:
+  mov rax, 44 ; send()
+  mov rdi, [clientfd]
+  mov rsi, http_response
+  mov rdx, http_response_len
+  mov r10, 0
+  syscall
+  jmp .close_client
 
   pop rbp
   ret
@@ -92,3 +98,9 @@ sin_addr   dd 0         ; INADDR_ANY
 sin_zero   dq 0         ; padding
 clientfd   dq 0
 buffer     rb 4096 ; reserve bytes -> 4096
+http_response db 'HTTP/1.1 200 OK', 0xD, 0xA, \
+                 'Content-Type: text/html', 0xD, 0xA, \
+                 'Content-Length: 30', 0xD, 0xA, \
+                 0xD, 0xA, \
+                 '<h1>Hello from assembly!</h1>'
+http_response_len = $ - http_response
