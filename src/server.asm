@@ -10,6 +10,7 @@ serve:
 
   mov [public_dir], rdi ; rdi : public_dir
   mov [port], esi       ; esi : port
+  mov ax, word [port]
   xchg al, ah
   mov [sin_port], ax
   mov [reload_gen], rdx ; rdx : reload_gen
