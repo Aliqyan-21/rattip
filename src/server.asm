@@ -54,6 +54,26 @@ serve:
 
   mov [clientfd], rax;
 
+  mov rax, 45 ; recv()
+  mov rdi, [clientfd]
+  mov rsi, buffer
+  mov rdx, 4096
+  mov r10, 0
+  syscall
+
+  cmp rax, 0
+  jle .close_client
+  jmp .handle_request
+
+.close_client:
+  mov rax, 3 ; close()
+  mov rdi, [clientfd]
+  syscall
+  jmp .accept_loop
+
+  .handle_request:
+  ; TODO: implement
+
   pop rbp
   ret
 
@@ -69,3 +89,4 @@ sin_port   dw 0         ; filled in runtime, after port arg
 sin_addr   dd 0         ; INADDR_ANY
 sin_zero   dq 0         ; padding
 clientfd   dq 0
+buffer     rb 4096 ; reserve bytes -> 4096
